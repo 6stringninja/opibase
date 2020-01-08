@@ -51,6 +51,7 @@ const rbuf = Buffer.alloc(2);
  const   bus = await I2cBus1();
  bus.scan((error: any, result: number[]) =>{
      console.log(result);
+     console.log("update");
  })
 })();
 /*
