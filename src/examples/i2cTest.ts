@@ -1,6 +1,6 @@
  
 import { open, I2cBus, openSync    } from "i2c-bus";
-const buff = Buffer.alloc(6);
+
 
  /*
 const MCP9808_ADDR = 0x18;
@@ -82,15 +82,19 @@ const prm = new Promise<void>(r=>{
    
        i2c1.writeByteSync(MPU6050_ADDRESS, 0x37, 0x02);           //INT_PIN_CFG   -- INT_LEVEL=0 ; INT_OPEN=0 ; LATCH_INT_EN=0 ; INT_RD_CLEAR=0 ; FSYNC_INT_LEVEL=0 ; FSYNC_INT_EN=0 ; I2C_BYPASS_EN=1 ; CLKOUT_EN=0
      delay(50);
- 
- 
+ for (let index = 0; index < 100; index++) {
+     
+     
+
+     const buff = Buffer.alloc(6);
    i2c1.readI2cBlockSync(MPU6050_ADDRESS,0x43,6,buff)
   const raw = [ buff.readInt16BE(0),
    buff.readInt16BE(2),
    buff.readInt16BE(4)];
 
   console.log({r:raw, c: raw.map(m=> m/16.4)});
-
+  delay(50);
+}
   delay(100);
   console.log(i2c1.scanSync());
       i2c1.closeSync();
