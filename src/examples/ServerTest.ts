@@ -1,4 +1,4 @@
-import { ServerClientState, ServerBase } from "./ServerBase";
+import { ServerClientState, ServerBase } from "../ServerBase";
 
 export class TestServerState extends ServerClientState<string>{
 
@@ -45,7 +45,7 @@ export class TestServer extends ServerBase<string,TestServerState>{
     }
 }
 import io from 'socket.io-client';
-import { AppConfig } from "./config";
+import { AppConfig } from "../config";
  
 setTimeout(()=>{
     console.log("here")
