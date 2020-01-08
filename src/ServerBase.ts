@@ -2,8 +2,8 @@ import { createServer, Server } from 'http';
 import express from 'express';
 import socketIo = require('socket.io');
 import { Subscription } from 'rxjs';
-import { ConcealedBehaviorSubject } from './ConcealedBehaviorSubject';
-import { ConcealedSubject } from './ConcealedSubject';
+import { ConcealedBehaviorSubject } from './rx/ConcealedBehaviorSubject';
+import { ConcealedSubject } from './rx/ConcealedSubject';
 import { SocketServerMessages } from './SocketServerMessages';
 import { AppConfig } from './config';
  
