@@ -1,5 +1,6 @@
  
-import { open, CompletionCallback } from "i2c-bus";
+import { open, I2cBus, openSync } from "i2c-bus";
+ 
 const MCP9808_ADDR = 0x18;
 const TEMP_REG = 0x05;
  
@@ -13,7 +14,9 @@ const toCelsius = rawData => {
  
 const wbuf = Buffer.from([TEMP_REG]);
 const rbuf = Buffer.alloc(2);
+/*
  try {
+     
     open(1,(error: any) => {
         if(error){
             console.log(error);
@@ -30,8 +33,26 @@ const rbuf = Buffer.alloc(2);
      
  } catch (error) {
      console.log("error i2c");
- }
+ }*/
+ function I2cBus1():Promise<I2cBus>{
+     return new Promise<I2cBus>(  (r,e)=>{
+       try {
+        r(openSync(1));
+       } catch (error) {
+           e(error);
+       }
+      
 
+     });
+
+   
+ }
+(async ()=>{
+ const   bus = await I2cBus1();
+ bus.scan((error: any, result: number[]) =>{
+     console.log(result);
+ })
+})();
 /*
 then(i2c1 => i2c1.i2cWrite(MCP9808_ADDR, wbuf.length, wbuf).
   then(_ => i2c1.i2cRead(MCP9808_ADDR, rbuf.length, rbuf)).
