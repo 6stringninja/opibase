@@ -1,6 +1,6 @@
  
 import { open, I2cBus, openSync } from "i2c-bus";
- 
+ /*
 const MCP9808_ADDR = 0x18;
 const TEMP_REG = 0x05;
  
@@ -47,20 +47,21 @@ const rbuf = Buffer.alloc(2);
 
    
  }
- function delay(ms:number) {
-    let start = Date.now();
-      let  now = start;
-    while (now - start < ms) {
-      now = Date.now();
-    }
-}
+
 (async ()=>{
  const   bus = await I2cBus1();
  bus.scan((error: any, result: number[]) =>{
      console.log(result);
      console.log("update");
  })
-})();
+})();*/
+function delay(ms:number) {
+    let start = Date.now();
+      let  now = start;
+    while (now - start < ms) {
+      now = Date.now();
+    }
+}
 const i2c1 =  open(1, err => {
     if (err) throw err;
     const  MPU6050_ADDRESS = 0x68;
