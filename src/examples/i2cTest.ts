@@ -85,7 +85,11 @@ const prm = new Promise<void>(r=>{
  
  
    i2c1.readI2cBlockSync(MPU6050_ADDRESS,0x43,6,buff)
-  console.log(buff);
+  const raw = [ buff.readInt16BE(0),
+   buff.readInt16BE(2),
+   buff.readInt16BE(4)];
+
+  console.log({r:raw, c: raw.map(m=> m/16.4)});
 
   delay(100);
   console.log(i2c1.scanSync());
