@@ -1,0 +1,9 @@
+{
+    "appName":"APP",
+    "webSockets":{
+        "enabled":true
+    },
+    "http":{
+        "port":43001
+    }
+}

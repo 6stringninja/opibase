@@ -1,0 +1,28 @@
+{
+  "name": "sp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc   -w",
+    "start": "nodemon ./build/index.js --ignore *.json",
+    "testserver": "nodemon ./build/ServerTest.js --ignore *.json"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/express": "^4.17.2",
+    "@types/node": "^12.12.14",
+    "@types/rx": "^4.1.1",
+    "@types/serialport": "^7.0.4",
+    "@types/socket.io": "^2.1.4",
+    "@types/socket.io-client": "^1.4.32",
+    "express": "^4.17.1",
+    "nodemon": "^2.0.1",
+    "rxjs": "^6.5.4",
+    "serialport": "^8.0.5",
+    "socket.io": "^2.3.0",
+    "socket.io-client": "^2.3.0",
+    "typescript": "^3.7.3"
+  }
+}
