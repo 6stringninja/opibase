@@ -62,8 +62,10 @@ function delay(ms:number) {
       now = Date.now();
     }
 }
-const i2c1 =  open(1, err => {
-    if (err) throw err;
+const prm = new Promise<void>(r=>{
+
+    const i2c1 =  openSync(1);
+
     const  MPU6050_ADDRESS = 0x68;
 
      i2c1.writeByteSync(MPU6050_ADDRESS, 0x6B, 0x80);             //PWR_MGMT_1    -- DEVICE_RESET 1
@@ -83,7 +85,14 @@ const i2c1 =  open(1, err => {
    
   
       i2c1.closeSync();
-  });
+    r();
+});
+
+ 
+(async ()=>{
+    await prm;
+   })() 
+
 /*
 then(i2c1 => i2c1.i2cWrite(MCP9808_ADDR, wbuf.length, wbuf).
   then(_ => i2c1.i2cRead(MCP9808_ADDR, rbuf.length, rbuf)).
