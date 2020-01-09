@@ -1,5 +1,6 @@
  
 import { open, I2cBus, openSync    } from "i2c-bus";
+import { mpu6050, mpu6050GyroRange, mpu6050AccRange, mpu6050ClockSource } from "../devices/i2c/mpu6050";
 
 
  /*
@@ -64,6 +65,14 @@ function delay(ms:number) {
       now = Date.now();
     }
 }
+const mpu = new mpu6050();
+mpu.clockSource = mpu6050ClockSource.PLLwithZGyroReference;
+mpu.gyroRange = mpu6050GyroRange.G2000;
+mpu.accRange = mpu6050AccRange.A2G;
+mpu.sleepEnabled = false;
+mpu.i2CMasterModeEnabled = false;
+mpu.i2CBypassEnabled = true;
+
 const prm = new Promise<void>(r=>{
 
     const i2c1 =  openSync(1);
