@@ -52,8 +52,8 @@ export class mpu6050 extends I2cBase {
         this.open();
         this.writeByte(mpu6050Register.MPU6050_RA_PWR_MGMT_1, 0x80); // RESET
         this.delay(50);
-        this.writeByte(mpu6050Register.MPU6050_RA_PWR_MGMT_1, 0x03);             //PWR_MGMT_1    -- SLEEP 0; CYCLE 0; TEMP_DIS 0; CLKSEL 3 (PLL with Z Gyro reference)
-        this.writeByte(mpu6050Register.MPU6050_RA_CONFIG, 0);    //CONFIG        -- EXT_SYNC_SET 0 (disable input pin for data sync) ; default DLPF_CFG = 0 => ACC bandwidth = 260Hz  GYRO bandwidth = 256Hz)
+     //   this.writeByte(mpu6050Register.MPU6050_RA_PWR_MGMT_1, 0x03);             //PWR_MGMT_1    -- SLEEP 0; CYCLE 0; TEMP_DIS 0; CLKSEL 3 (PLL with Z Gyro reference)
+      //  this.writeByte(mpu6050Register.MPU6050_RA_CONFIG, 0);    //CONFIG        -- EXT_SYNC_SET 0 (disable input pin for data sync) ; default DLPF_CFG = 0 => ACC bandwidth = 260Hz  GYRO bandwidth = 256Hz)
 
         this.close();
 
@@ -155,6 +155,6 @@ export class mpu6050 extends I2cBase {
         this._mpu6050AccRange = value;
         this.close();
     }
-
+    
     
 }

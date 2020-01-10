@@ -2,7 +2,9 @@ import { mpu6050, mpu6050Address, mpu6050Register, mpu6050ClockSource } from "..
 
 describe(' mpu6050 ', function() {
    const mpu = new mpu6050(mpu6050Address.A)
- 
+   beforeAll(function(){
+    mpu.reset();
+   });
     it('getDeviceId should be 0x68', async function(done) {
         const deviceId = mpu.getDeviceId();
         const expectedId = 0x68;
