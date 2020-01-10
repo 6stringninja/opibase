@@ -124,10 +124,7 @@ it('getRotationScaled', async function(done) {
      mpu.accRange = mpu6050AccRange.A2G;
   //   mpu.sleepEnabled = false;
      mpu.delay(10);
-     for (let index = 0; index < 50; index++) {
-      
-         
-    
+   
      const v = mpu.getAccelerationScaled();
      console.log({acc:v});
      const accelerationX = v[0]
@@ -138,8 +135,7 @@ it('getRotationScaled', async function(done) {
   console.log({roll,pitch})
 
  expect(v.length).toBe(3);
- mpu.delay(5);
-}
+ 
    done();
  });
   });
