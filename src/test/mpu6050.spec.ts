@@ -120,7 +120,13 @@ it('getRotationScaled', async function(done) {
      mpu.delay(10);
      const v = mpu.getAccelerationScaled();
      console.log({acc:v});
-   expect(v.length).toBe(3);
+     const accelerationX = v[0]
+     const accelerationY = v[1];
+     const accelerationZ = v[2];
+     const pitch = 180 * Math.atan (accelerationX/Math.sqrt(accelerationY*accelerationY + accelerationZ*accelerationZ))/3.14159265358979323846264338327950288;
+ const roll = 180 * Math.atan (accelerationY/Math.sqrt(accelerationX*accelerationX + accelerationZ*accelerationZ))/3.14159265358979323846264338327950288;
+  console.log({roll,pitch})
+ expect(v.length).toBe(3);
    done();
  });
   });
