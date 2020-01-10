@@ -74,7 +74,7 @@ describe(' mpu6050 ', function() {
     done();
 });
 it('getRotation', async function(done) {
-    mpu.reset();
+ 
     mpu.clockSource = mpu6050ClockSource.PLLwithXGyroReference;
     mpu.gyroRange = mpu6050GyroRange.G250;
     mpu.sleepEnabled = false;
@@ -85,7 +85,7 @@ it('getRotation', async function(done) {
   done();
 });
 it('getAcceleration', async function(done) {
-    mpu.reset();
+    
     mpu.clockSource = mpu6050ClockSource.PLLwithXGyroReference;
     mpu.accRange = mpu6050AccRange.A2G;
     mpu.sleepEnabled = false;
