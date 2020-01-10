@@ -10,7 +10,9 @@ export enum mpu6050Register {
     MPU6050_RA_GYRO_CONFIG = 0x1B,
     MPU6050_RA_ACCEL_CONFIG = 0x1C,
     MPU6050_RA_INT_PIN_CFG = 0x37,
-    MPU6050_RA_USER_CTRL   =     0x6A
+    MPU6050_RA_USER_CTRL   =     0x6A,
+    MPU6050_RA_ACCEL_XOUT_H  =   0x3B,
+    MPU6050_RA_GYRO_XOUT_H   =   0x43
 }
 export enum mpu6050GyroRange {
     G250,
@@ -155,6 +157,20 @@ export class mpu6050 extends I2cBase {
         this._mpu6050AccRange = value;
         this.close();
     }
-    
+    private Buff6_RawToInt16_3(b:Buffer){
+        return[b.readUInt16BE(0), b.readUInt16BE(2),b.readUInt16BE(4)  ];
+    }
+    public getAcceleration(){
+        this.open();
+       const res =  this.Buff6_RawToInt16_3( this.readBytes(mpu6050Register.MPU6050_RA_ACCEL_XOUT_H,6));
+        this.close();
+        return res;
+    }
+    public getRotation(){
+        this.open();
+       const res =  this.Buff6_RawToInt16_3( this.readBytes(mpu6050Register.MPU6050_RA_GYRO_XOUT_H,6));
+        this.close();
+        return res;
+    }
     
 }

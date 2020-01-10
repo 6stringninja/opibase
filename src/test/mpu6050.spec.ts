@@ -73,4 +73,26 @@ describe(' mpu6050 ', function() {
         expect(sgyro).toBe(ngyro);
     done();
 });
+it('getRotation', async function(done) {
+    mpu.reset();
+    mpu.clockSource = mpu6050ClockSource.PLLwithXGyroReference;
+    mpu.gyroRange = mpu6050GyroRange.G250;
+    mpu.sleepEnabled = false;
+    mpu.delay(10);
+    const v = mpu.getRotation();
+    console.log({rotation:v});
+  expect(v.length).toBe(3);
+  done();
+});
+it('getAcceleration', async function(done) {
+    mpu.reset();
+    mpu.clockSource = mpu6050ClockSource.PLLwithXGyroReference;
+    mpu.accRange = mpu6050AccRange.A2G;
+    mpu.sleepEnabled = false;
+    mpu.delay(10);
+    const v = mpu.getAcceleration();
+    console.log({acc:v});
+  expect(v.length).toBe(3);
+  done();
+});
   });

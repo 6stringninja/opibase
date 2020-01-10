@@ -29,9 +29,9 @@ export interface II2cBase {
     close(): void;
     init(): boolean;
     testConnection(): boolean;
-    readBytes(command: number, byte: number, len: number): Buffer;
+    readBytes(command: number,  len: number): Buffer;
     readByte(command: number): number;
-    writeBytes(command: number, byte: number, len: number, bf: Buffer): number;
+    writeBytes(command: number,   len: number, bf: Buffer): number;
     writeByte(command: number, byte: number): void;
     isValidAddress(refresh: boolean): boolean;
 }
@@ -86,12 +86,12 @@ export abstract class I2cBase implements II2cBase {
         this.throwErrorOnBusClosed();
         return this.bus.writeByteSync(this.address, command, byte);
     }
-    readBytes(command: number, byte: number, len: number): Buffer {
+    readBytes(command: number,   len: number): Buffer {
         this.throwErrorOnBusClosed();
         this.bus.readI2cBlockSync(this.address, command, len, this.buff);
         return this.buff.slice(0, len);
     }
-    writeBytes(command: number, byte: number, len: number, bf: Buffer): number {
+    writeBytes(command: number,   len: number, bf: Buffer): number {
         this.throwErrorOnBusClosed();
         return this.bus.writeI2cBlockSync(this.address, command, len, bf);
 
