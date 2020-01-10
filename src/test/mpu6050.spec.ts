@@ -118,6 +118,10 @@ it('getRotationScaled', async function(done) {
      mpu.accRange = mpu6050AccRange.A2G;
   //   mpu.sleepEnabled = false;
      mpu.delay(10);
+     for (let index = 0; index < 50; index++) {
+      
+         
+    
      const v = mpu.getAccelerationScaled();
      console.log({acc:v});
      const accelerationX = v[0]
@@ -126,7 +130,10 @@ it('getRotationScaled', async function(done) {
      const pitch = 180 * Math.atan (accelerationX/Math.sqrt(accelerationY*accelerationY + accelerationZ*accelerationZ))/3.14159265358979323846264338327950288;
  const roll = 180 * Math.atan (accelerationY/Math.sqrt(accelerationX*accelerationX + accelerationZ*accelerationZ))/3.14159265358979323846264338327950288;
   console.log({roll,pitch})
+
  expect(v.length).toBe(3);
+ mpu.delay(5);
+}
    done();
  });
   });
