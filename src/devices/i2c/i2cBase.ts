@@ -1,4 +1,5 @@
 import { I2cBus, openSync } from "i2c-bus";
+import { bit_set, bit_clear } from "../../common/bitwise";
 
 
 export const defaultBufferSize = 32;
@@ -101,6 +102,7 @@ export abstract class I2cBase implements II2cBase {
     }
     writeBit(regAddr: number, bitNum: number, data: boolean) {
         let b = this.readByte(regAddr);
+      //  b = data ? bit_set(b,bitNum) : bit_clear(b,bitNum);
 
         b = ((data ? 1 : 0) != 0) ? (b | (1 << bitNum)) : (b & ~(1 << bitNum));
         this.writeByte(regAddr, b);

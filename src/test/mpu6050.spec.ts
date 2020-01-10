@@ -1,4 +1,4 @@
-import { mpu6050, mpu6050Address } from "../devices/i2c/mpu6050";
+import { mpu6050, mpu6050Address, mpu6050Register } from "../devices/i2c/mpu6050";
 
 describe(' mpu6050 ', function() {
    const mpu = new mpu6050(mpu6050Address.A)
@@ -11,11 +11,14 @@ describe(' mpu6050 ', function() {
       done();
     });
     it('sleepEnabled test', async function(done) {
+        const test = 255;
+       const pwr_mgmt = mpu.readByte(mpu6050Register.MPU6050_RA_PWR_MGMT_1)
         const intialSleepEnabled = mpu.sleepEnabled
         const oppositeSleeEnabled = !intialSleepEnabled;
+        mpu.sleepEnabled = oppositeSleeEnabled;
         const newSleepEnabled = mpu.sleepEnabled;
 
-        console.log({intialSleepEnabled,oppositeSleeEnabled,newSleepEnabled})
+        console.log({pwr_mgmt,intialSleepEnabled,oppositeSleeEnabled,newSleepEnabled})
       expect(newSleepEnabled).toBe(oppositeSleeEnabled);
       done();
     });
