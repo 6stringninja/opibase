@@ -18,7 +18,7 @@ describe(' mpu6050 ', function() {
         mpu.sleepEnabled = oppositeSleeEnabled;
         const newSleepEnabled = mpu.sleepEnabled;
 
-        console.log({pwr_mgmt,intialSleepEnabled,oppositeSleeEnabled,newSleepEnabled})
+        console.log({ intialSleepEnabled,oppositeSleeEnabled,newSleepEnabled})
       expect(newSleepEnabled).toBe(oppositeSleeEnabled);
       done();
     });
