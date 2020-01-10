@@ -20,12 +20,14 @@ export enum mpu6050GyroRange {
     G1000,
     G2000
 }
+export const mpu6050GyroRangeScale = [131.0,65.5,32.8,16.4];
 export enum mpu6050AccRange {
     A2G,
     A4G,
     A86,
     A16G
 }
+export const mpu6050AccRangeScale = [8192.0 , 4096.0,2048.0,1024.0];
 export enum mpu6050ClockSource {
     InternalOsc,
     PLLwithXGyroReference,
@@ -166,11 +168,20 @@ export class mpu6050 extends I2cBase {
         this.close();
         return res;
     }
+    public getAccelerationScaled(){
+        
+ 
+      return  this.getAcceleration().map(m=> m !=0 ? m / mpu6050AccRangeScale[this._mpu6050AccRange]:0);
+
+  
+    }
     public getRotation(){
         this.open();
        const res =  this.Buff6_RawToInt16_3( this.readBytes(mpu6050Register.MPU6050_RA_GYRO_XOUT_H,6));
         this.close();
         return res;
     }
-    
+    public getRotationScaled(){
+      return  this.getRotation().map(m=> m !=0 ? m / mpu6050GyroRangeScale[this._mpu6050GyroRange]:0);
+    }
 }
