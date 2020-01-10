@@ -12,7 +12,10 @@ export const defaultI2cBus = I2cBusNumber.I2C1;
 
 export enum I2cDeviceType {
     unknown = 0,
-    MPU6050 = 1
+    MPU6050 = 1,
+    BNO055 = 2,
+    BMP280 = 3,
+    MPL3115A2=4
 }
 export enum I2cDeviceStatus {
     notIntialized,
