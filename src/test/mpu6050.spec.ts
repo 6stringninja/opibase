@@ -1,9 +1,9 @@
-import { mpu6050, mpu6050Address, mpu6050Register, mpu6050ClockSource } from "../devices/i2c/mpu6050";
+import { mpu6050, mpu6050Address, mpu6050Register, mpu6050ClockSource, mpu6050AccRange, mpu6050GyroRange } from "../devices/i2c/mpu6050";
 
 describe(' mpu6050 ', function() {
    const mpu = new mpu6050(mpu6050Address.A)
    beforeAll(function(){
-    mpu.reset();
+     
    });
     it('getDeviceId should be 0x68', async function(done) {
         const deviceId = mpu.getDeviceId();
@@ -59,4 +59,18 @@ describe(' mpu6050 ', function() {
       expect(newv).toBe(opposite);
       done();
     });
+    it('set acc gyro rates', async function(done) {
+        const acc = mpu.accRange;
+        const gyro = mpu.gyroRange;
+        const nacc = acc === mpu6050AccRange.A16G ? mpu6050AccRange.A2G : mpu6050AccRange.A16G ;
+        const ngyro = gyro === mpu6050GyroRange.G2000 ? mpu6050GyroRange.G250 : mpu6050GyroRange.G2000;
+        mpu.accRange = nacc;
+        mpu.gyroRange = ngyro;
+        const sacc = mpu.accRange;
+        const sgyro = mpu.gyroRange;
+        console.log({ acc,nacc,sacc,gyro,ngyro,sgyro});
+        expect(sacc).toBe(nacc);
+        expect(sgyro).toBe(ngyro);
+    done();
+});
   });
