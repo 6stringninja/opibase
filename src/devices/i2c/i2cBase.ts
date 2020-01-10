@@ -39,13 +39,7 @@ export interface II2cBase {
     isValidAddress(refresh: boolean): boolean;
 }
 export abstract class I2cBase implements II2cBase {
-    delay(ms: number) {
-        let start = Date.now();
-        let now = start;
-        while (now - start < ms) {
-            now = Date.now();
-        }
-    }
+ 
     abstract testConnection(): boolean;
     status = I2cDeviceStatus.notIntialized;
     init(): boolean {
@@ -131,6 +125,13 @@ export abstract class I2cBase implements II2cBase {
         b &= ~(mask); // zero all important bits in existing byte
         b |= data; // combine data with existing byte
         this.writeByte(regAddr, b);
+    }
+    delay(ms: number) {
+        let start = Date.now();
+        let now = start;
+        while (now - start < ms) {
+            now = Date.now();
+        }
     }
     constructor(public address: number, public device: I2cDeviceType, public busNummber: I2cBusNumber = defaultI2cBus) {
         if (!this.isValidAddress(true)) throw `invalid address ${this.address}`;
