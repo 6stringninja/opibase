@@ -12,7 +12,7 @@ describe(' mpu6050 ', function() {
     });
     it('sleepEnabled test', async function(done) {
         const test = 255;
-       const pwr_mgmt = mpu.readByte(mpu6050Register.MPU6050_RA_PWR_MGMT_1)
+      
         const intialSleepEnabled = mpu.sleepEnabled
         const oppositeSleeEnabled = !intialSleepEnabled;
         mpu.sleepEnabled = oppositeSleeEnabled;
