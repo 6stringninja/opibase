@@ -1,4 +1,4 @@
-import { mpu6050, mpu6050Address, mpu6050Register, mpu6050ClockSource, mpu6050AccRange, mpu6050GyroRange } from "../devices/i2c/mpu6050";
+import { mpu6050, mpu6050Address, mpu6050Register, mpu6050ClockSource, mpu6050AccRange, mpu6050GyroRange, mpu6050DigitalLowPassFilter } from "../devices/i2c/mpu6050";
 
 describe(' mpu6050 ', function() {
    const mpu = new mpu6050(mpu6050Address.A)
@@ -13,8 +13,7 @@ describe(' mpu6050 ', function() {
       done();
     });
     it('_clockSource test', async function(done) {
-        const test = 255;
-      
+
         const intial = mpu.clockSource;
         const opposite = intial=== mpu6050ClockSource.PLLwithZGyroReference ? mpu6050ClockSource.PLLwithXGyroReference : mpu6050ClockSource.PLLwithZGyroReference;
         mpu.clockSource = opposite;
@@ -25,8 +24,7 @@ describe(' mpu6050 ', function() {
       done();
     });
     it('sleepEnabled test', async function(done) {
-        const test = 255;
-      
+
         const intialSleepEnabled = mpu.sleepEnabled
         const oppositeSleeEnabled = !intialSleepEnabled;
         mpu.sleepEnabled = oppositeSleeEnabled;
@@ -38,8 +36,7 @@ describe(' mpu6050 ', function() {
       done();
     });
     it('i2CMasterModeEnabled test', async function(done) {
-        const test = 255;
-      
+
         const intiali2CMasterModeEnabled = mpu.i2CMasterModeEnabled
         const oppositei2CMasterModeEnabled = !intiali2CMasterModeEnabled;
         mpu.i2CMasterModeEnabled = oppositei2CMasterModeEnabled;
@@ -52,8 +49,7 @@ describe(' mpu6050 ', function() {
       done();
     });
     it('i2CBypassEnabled test', async function(done) {
-        const test = 255;
-      
+
         const intiali2CBypassEnabled = mpu.i2CBypassEnabled
         const oppositei2CBypassEnabled = !intiali2CBypassEnabled;
         mpu.i2CBypassEnabled = oppositei2CBypassEnabled;
@@ -64,7 +60,17 @@ describe(' mpu6050 ', function() {
       done();
     });
 
+    it('DLPFMode test', async function(done) {
 
+        const intial = mpu.DLPFMode;
+        const opposite =  intial === mpu6050DigitalLowPassFilter.A260hz_G256hz ? mpu6050DigitalLowPassFilter.A184hz_G188hz : mpu6050DigitalLowPassFilter.A260hz_G256hz;
+        mpu.DLPFMode = opposite;
+        const newv = mpu.DLPFMode
+        console.log({ intial,opposite,newv})
+      expect(newv).toBe(opposite);
+      mpu.DLPFMode = mpu6050DigitalLowPassFilter.A260hz_G256hz;
+      done();
+    });
     it('set acc gyro rates', async function(done) {
         const acc = mpu.accRange;
         const gyro = mpu.gyroRange;

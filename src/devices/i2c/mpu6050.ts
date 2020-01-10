@@ -13,6 +13,7 @@ export enum mpu6050Register {
     MPU6050_RA_USER_CTRL   =     0x6A,
     MPU6050_RA_ACCEL_XOUT_H  =   0x3B,
     MPU6050_RA_GYRO_XOUT_H   =   0x43
+  
 }
 export enum mpu6050GyroRange {
     G250,
@@ -38,6 +39,18 @@ export enum mpu6050ClockSource {
     Reserved,
     stopstheclock
 }
+export enum mpu6050DigitalLowPassFilter{
+    A260hz_G256hz,
+ A184hz_G188hz,
+ A94hz_G98Hz,
+ A44hz_G42hz,
+ A21hz_G20hz,
+ A10hz_G10hz,
+ A5hz_G5hz
+}
+const  MPU6050_CFG_DLPF_CFG_BIT   = 2;
+const  MPU6050_CFG_DLPF_CFG_LENGTH = 3;
+
 const mpu6050deviceId = 0x68;
 const MPU6050_PWR1_SLEEP_BIT      =    6
 const MPU6050_PWR1_CLKSEL_BIT     =    2;
@@ -159,6 +172,44 @@ export class mpu6050 extends I2cBase {
         this._mpu6050AccRange = value;
         this.close();
     }
+    /** Get digital low-pass filter configuration.
+ * The DLPF_CFG parameter sets the digital low pass filter configuration. It
+ * also determines the internal sampling rate used by the device as shown in
+ * the table below.
+ *
+ * Note: The accelerometer output rate is 1kHz. This means that for a Sample
+ * Rate greater than 1kHz, the same accelerometer sample may be output to the
+ * FIFO, DMP, and sensor registers more than once.
+ *
+
+ *          |   ACCELEROMETER    |           GYROSCOPE
+ * DLPF_CFG | Bandwidth | Delay  | Bandwidth | Delay  | Sample Rate
+ * ---------+-----------+--------+-----------+--------+-------------
+ * 0        | 260Hz     | 0ms    | 256Hz     | 0.98ms | 8kHz
+ * 1        | 184Hz     | 2.0ms  | 188Hz     | 1.9ms  | 1kHz
+ * 2        | 94Hz      | 3.0ms  | 98Hz      | 2.8ms  | 1kHz
+ * 3        | 44Hz      | 4.9ms  | 42Hz      | 4.8ms  | 1kHz
+ * 4        | 21Hz      | 8.5ms  | 20Hz      | 8.3ms  | 1kHz
+ * 5        | 10Hz      | 13.8ms | 10Hz      | 13.4ms | 1kHz
+ * 6        | 5Hz       | 19.0ms | 5Hz       | 18.6ms | 1kHz
+ * 7        |   -- Reserved --   |   -- Reserved --   | Reserved
+
+ */
+    private _DLPFMode = mpu6050DigitalLowPassFilter.A260hz_G256hz;
+    public get DLPFMode() {
+        this.open();
+        this._DLPFMode = this.readBits(mpu6050Register.MPU6050_RA_CONFIG ,MPU6050_CFG_DLPF_CFG_BIT, MPU6050_CFG_DLPF_CFG_LENGTH);
+        this.close();
+        return this._DLPFMode;
+    }
+    public set DLPFMode(value) {
+     
+        this.open();
+        this.writeBits(mpu6050Register.MPU6050_RA_CONFIG, MPU6050_CFG_DLPF_CFG_BIT, MPU6050_CFG_DLPF_CFG_LENGTH, value);
+        this._DLPFMode = value;
+        this.close();
+    }
+
     private Buff6_RawToInt16_3(b:Buffer){
         return[b.readInt16BE(0), b.readInt16BE(2),b.readInt16BE(4)  ];
     }
@@ -184,4 +235,5 @@ export class mpu6050 extends I2cBase {
     public getRotationScaled(){
       return  this.getRotation().map(m=> m !=0 ? m / mpu6050GyroRangeScale[this._mpu6050GyroRange]:0);
     }
+    
 }
