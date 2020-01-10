@@ -12,6 +12,18 @@ describe(' mpu6050 ', function() {
       expect(deviceId).toBe(expectedId);
       done();
     });
+    it('_clockSource test', async function(done) {
+        const test = 255;
+      
+        const intial = mpu.clockSource;
+        const opposite = intial=== mpu6050ClockSource.PLLwithZGyroReference ? mpu6050ClockSource.PLLwithXGyroReference : mpu6050ClockSource.PLLwithZGyroReference;
+        mpu.clockSource = opposite;
+        const newv = mpu.clockSource
+        console.log({ intial,opposite,newv})
+      expect(newv).toBe(opposite);
+      mpu.clockSource = mpu6050ClockSource.PLLwithXGyroReference;
+      done();
+    });
     it('sleepEnabled test', async function(done) {
         const test = 255;
       
@@ -22,6 +34,7 @@ describe(' mpu6050 ', function() {
 
         console.log({ intialSleepEnabled,oppositeSleeEnabled,newSleepEnabled})
       expect(newSleepEnabled).toBe(oppositeSleeEnabled);
+      mpu.sleepEnabled = false;
       done();
     });
     it('i2CMasterModeEnabled test', async function(done) {
@@ -30,10 +43,12 @@ describe(' mpu6050 ', function() {
         const intiali2CMasterModeEnabled = mpu.i2CMasterModeEnabled
         const oppositei2CMasterModeEnabled = !intiali2CMasterModeEnabled;
         mpu.i2CMasterModeEnabled = oppositei2CMasterModeEnabled;
+        
         const newintiali2CMasterModeEnabled = mpu.i2CMasterModeEnabled;
 
         console.log({ intiali2CMasterModeEnabled,oppositei2CMasterModeEnabled,newintiali2CMasterModeEnabled})
       expect(newintiali2CMasterModeEnabled).toBe(oppositei2CMasterModeEnabled);
+      mpu.i2CMasterModeEnabled = false;
       done();
     });
     it('i2CBypassEnabled test', async function(done) {
@@ -45,20 +60,11 @@ describe(' mpu6050 ', function() {
         const newintiali2CBypassEnabled = mpu.i2CBypassEnabled
         console.log({ intiali2CBypassEnabled,oppositei2CBypassEnabled,newintiali2CBypassEnabled})
       expect(newintiali2CBypassEnabled).toBe(oppositei2CBypassEnabled);
+      mpu.i2CBypassEnabled = true;
       done();
     });
 
-    it('_clockSource test', async function(done) {
-        const test = 255;
-      
-        const intial = mpu.clockSource;
-        const opposite = intial=== mpu6050ClockSource.PLLwithZGyroReference ? mpu6050ClockSource.PLLwithXGyroReference : mpu6050ClockSource.PLLwithZGyroReference;
-        mpu.clockSource = opposite;
-        const newv = mpu.clockSource
-        console.log({ intial,opposite,newv})
-      expect(newv).toBe(opposite);
-      done();
-    });
+
     it('set acc gyro rates', async function(done) {
         const acc = mpu.accRange;
         const gyro = mpu.gyroRange;
@@ -75,9 +81,9 @@ describe(' mpu6050 ', function() {
 });
 it('getRotation', async function(done) {
  
-    mpu.clockSource = mpu6050ClockSource.PLLwithXGyroReference;
+   // mpu.clockSource = mpu6050ClockSource.PLLwithXGyroReference;
     mpu.gyroRange = mpu6050GyroRange.G250;
-    mpu.sleepEnabled = false;
+  //  mpu.sleepEnabled = false;
     mpu.delay(10);
     const v = mpu.getRotation();
     console.log({rotation:v});
@@ -86,9 +92,9 @@ it('getRotation', async function(done) {
 });
 it('getAcceleration', async function(done) {
     
-    mpu.clockSource = mpu6050ClockSource.PLLwithXGyroReference;
+//    mpu.clockSource = mpu6050ClockSource.PLLwithXGyroReference;
     mpu.accRange = mpu6050AccRange.A2G;
-    mpu.sleepEnabled = false;
+ //   mpu.sleepEnabled = false;
     mpu.delay(10);
     const v = mpu.getAcceleration();
     console.log({acc:v});
