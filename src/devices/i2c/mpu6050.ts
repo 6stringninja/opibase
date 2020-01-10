@@ -160,7 +160,7 @@ export class mpu6050 extends I2cBase {
         this.close();
     }
     private Buff6_RawToInt16_3(b:Buffer){
-        return[b.readUInt16BE(0), b.readUInt16BE(2),b.readUInt16BE(4)  ];
+        return[b.readInt16BE(0), b.readInt16BE(2),b.readInt16BE(4)  ];
     }
     public getAcceleration(){
         this.open();
