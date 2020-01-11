@@ -73,6 +73,13 @@ export class bno055 extends I2cBase {
 	let  x:number, y:number, z:number;
     x = y = z = 0;
     this.open();
+    const array:number[]=[];
+    for (let index = 0; index < 6; index++) {
+         array[index] = this.readByte(vector_type+index);
+        
+    }
+    this.close();
+    return array;
    const buff =  this.readBytes(vector_type,6)
 	/* Read vector data (6 bytes) */
 //	readLen((Imu_BNO055_reg_t)vector_type, buffer, 6);
