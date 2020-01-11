@@ -175,9 +175,10 @@ this._measReg.osrs_p = pressSampling;
 
 this._configReg.filter = filter;
 this._configReg.t_sb = duration;
-
+this.open();
 this.writeByte(bmp280Register.BMP280_REGISTER_CONFIG, this._configReg.get());
 this.writeByte(bmp280Register.BMP280_REGISTER_CONTROL, this._measReg.get());
+this.close();
 }
 readAltitude( seaLevelhPa = 1013.25) {
     let altitude:number = 0;
