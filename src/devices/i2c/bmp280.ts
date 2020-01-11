@@ -1,6 +1,6 @@
 
 import { I2cBase, I2cDeviceType } from "./i2cBase";
-import { bit_test, bits_write } from "../../common/bitwise";
+import { bit_test, bits_write, bits_read } from "../../common/bitwise";
 export enum bmp280Address {
     A = 0x76,
     B = 0x77
@@ -190,7 +190,19 @@ this.open();
 
 this.writeByte(bmp280Register.BMP280_REGISTER_CONFIG, this._configReg.get());
 this.writeByte(bmp280Register.BMP280_REGISTER_CONTROL, this._measReg.get());
+this.readMeas();
 this.close();
+}
+readMeas(){
+    this.open();
+    const v = this.readByte(bmp280Register.BMP280_REGISTER_CONTROL);
+    this.close();
+    const r = new Bmp280ctrl_meas();
+    r.mode = bits_read(v,1,2);
+    r.osrs_p = bits_read(v,7,3);
+    r.osrs_t = bits_read(v,4,3);
+    console.log({val:v,result:r});
+    return r;
 }
 readAltitude( seaLevelhPa = 1013.25) {
     let altitude:number = 0;
