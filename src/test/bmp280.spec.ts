@@ -15,6 +15,15 @@ describe(' bno055 ', function() {
         const coefs = bmp.readCoefficients();
        console.log({m:"bmp280",coefs})
       expect(coefs).toBeDefined();
+      
+      done();
+    });
+    it(' bmp.readCoefficients(); true', async function(done) {
+        const coefs = bmp.readCoefficients();
+        const tmp = bmp.readTemperature();
+       console.log({m:"bmp280 tmp",tmp})
+      expect(tmp).toBeDefined();
+      
       done();
     });
     });

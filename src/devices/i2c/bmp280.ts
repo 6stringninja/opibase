@@ -132,6 +132,28 @@ export class bmp280 extends I2cBase {
         super(addr, I2cDeviceType.BMP280);
     }
     private _bmp280_calib = new bm280CalibData();
+    readTemperature() {
+        let var1:number, var2:number;
+      this.open();
+        let adc_T = this.readUint24( bmp280Register. BMP280_REGISTER_TEMPDATA);
+      this.close();
+        adc_T >>= 4;
+      
+        var1 = ((((adc_T >> 3) - (this._bmp280_calib.dig_T1 << 1))) *
+                (this._bmp280_calib.dig_T2)) >>
+               11;
+      
+        var2 = (((((adc_T >> 4) - (this._bmp280_calib.dig_T1)) *
+                  ((adc_T >> 4) - (this._bmp280_calib.dig_T1))) >>
+                 12) *
+                (this._bmp280_calib.dig_T3)) >>
+               14;
+      
+       let t_fine = var1 + var2;
+      
+        let T = (t_fine * 5 + 128) >> 8;
+        return T / 100;
+      }
     readCoefficients(){
         this.open();
         this._bmp280_calib.dig_T1 = this.readUint16LE(bmp280Register.BMP280_REGISTER_DIG_T1);

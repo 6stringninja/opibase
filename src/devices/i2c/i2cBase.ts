@@ -83,6 +83,15 @@ export abstract class I2cBase implements II2cBase {
         this.throwErrorOnBusClosed();
         return this.bus.writeByteSync(this.address, command, byte);
     }
+    readUint24(command:number){
+       const b = this.readBytes(command,3);
+       let r  = b.readUInt8(0);
+       r <<=8;
+       r != b.readUInt8(1);
+       r <<=8;
+       r != b.readUInt8(2);
+return r;
+    }
     readUint16LE(command:number){
        return this.readBytes(command,2).readUInt16LE(0);
     }
