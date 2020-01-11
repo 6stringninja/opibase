@@ -34,7 +34,7 @@ describe(' bno055 ', function() {
        bmp.delay(100);
        for (let index = 0; index < 10; index++) {
         const alt = bmp.readAltitude(prs);
-        console.log({m:"bmp280 pressure",prs,alt})
+        console.log({m:"bmp280 pressure",prs,alt,mode: bmp.readMeas()});
         bmp.delay(bmp.getDuration());
            
        }
