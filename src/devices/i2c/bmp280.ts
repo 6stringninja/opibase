@@ -1,5 +1,6 @@
 
 import { I2cBase, I2cDeviceType } from "./i2cBase";
+import { bit_test, bits_write } from "../../common/bitwise";
 export enum bmp280Address {
     A = 0x76,
     B = 0x77
@@ -135,7 +136,12 @@ export class  Bmp280config {
     /** Enables 3-wire SPI */
      spi3w_en : number;
     /** Used to retrieve the assembled config register's byte value. */
-     get() { return (this.t_sb << 5) | (this.filter << 2) | this.spi3w_en; }
+     get() { 
+         let v = bits_write(0,7,3,this.t_sb);
+         v = bits_write(v,4,3,this.filter);
+         v=bits_write(v,0,1,this.spi3w_en);
+         return v;
+     }
   };
 
   /** Encapsulates trhe ctrl_meas register */
@@ -147,7 +153,12 @@ export class  Bmp280config {
     /** Device mode */
      mode : sensor_mode = sensor_mode.MODE_NORMAL;
     /** Used to retrieve the assembled ctrl_meas register's byte value. */
-     get() { return (this.osrs_t << 5) | (this.osrs_p << 2) | this.mode; }
+     get() {
+         let v = bits_write(0,7,3,this.osrs_t);
+         v = bits_write(v,4,3,this.osrs_p);
+         v = bits_write(v,1,2,this.mode);
+        return v;
+     }
   };
 export class bmp280 extends I2cBase {
     testConnection(): boolean {
@@ -166,8 +177,8 @@ export class bmp280 extends I2cBase {
     setSampling( mode: sensor_mode = sensor_mode.MODE_NORMAL,
          tempSampling: sensor_sampling = sensor_sampling.SAMPLING_X4,
          pressSampling: sensor_sampling = sensor_sampling.SAMPLING_X8,
-         filter: sensor_filter = sensor_filter.FILTER_OFF,
-         duration: standby_duration = standby_duration.STANDBY_MS_500) {
+         filter: sensor_filter = sensor_filter.FILTER_X2,
+         duration: standby_duration = standby_duration.STANDBY_MS_125) {
 
 this._measReg.mode = mode;
 this._measReg.osrs_t = tempSampling;
@@ -176,6 +187,7 @@ this._measReg.osrs_p = pressSampling;
 this._configReg.filter = filter;
 this._configReg.t_sb = duration;
 this.open();
+
 this.writeByte(bmp280Register.BMP280_REGISTER_CONFIG, this._configReg.get());
 this.writeByte(bmp280Register.BMP280_REGISTER_CONTROL, this._measReg.get());
 this.close();
