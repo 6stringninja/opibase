@@ -250,6 +250,7 @@ readAltitude( seaLevelhPa = 1013.25) {
        
       this.open();
         let adc_P = this.readUint24(bmp280Register.BMP280_REGISTER_PRESSUREDATA);
+        console.log({p});
         this.close();
         adc_P >>= 4;
       
