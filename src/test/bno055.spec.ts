@@ -13,5 +13,15 @@ describe(' bno055 ', function() {
        expect(deviceId).toBe(expectedId);
        done();
      });
-    }
+ 
+
+    it('begin() should be true', async function(done) {
+        const result = mpu.begin();
+   
+        console.log("bno.begin");
+      expect(result).toBeTrue();
+      done();
+    });
+
+   }
 );
