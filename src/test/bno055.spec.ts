@@ -13,7 +13,7 @@ describe(' bno055 ', function() {
        expect(deviceId).toBe(expectedId);
        done();
      });
- 
+  /*
 
     it('begin() should be true', async function(done) {
         mpu.delay(500);
@@ -23,7 +23,7 @@ describe(' bno055 ', function() {
       expect(result).toBeTruthy();
       done();
     });
-   /* it(' mpu.getVector(BNO055Vector.VECTOR_EULER)', async function(done) {
+   it(' mpu.getVector(BNO055Vector.VECTOR_EULER)', async function(done) {
         mpu.delay(10);
         const result = mpu.getVector(BNO055Vector.VECTOR_EULER);
    
