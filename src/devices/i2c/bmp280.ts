@@ -196,6 +196,19 @@ this.delay(400);
 this.close();
 this.readMeas();
 }
+readConf(){
+    this.open();
+    const v = this.readByte(bmp280Register.BMP280_REGISTER_CONFIG);
+    this.close();
+    const r = new Bmp280config();
+
+    
+    r.filter = bits_read(v,4,3);
+    r.t_sb = bits_read(v,7,3);
+    r.spi3w_en = bits_read(v,0,1)
+    console.log({val:v,result:r});
+    return r;
+}
 readMeas(){
     this.open();
     const v = this.readByte(bmp280Register.BMP280_REGISTER_CONTROL);
