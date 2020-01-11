@@ -137,7 +137,7 @@ export class bno055 extends I2cBase {
     this.close();
 	return xyz;
 }
-    constructor(addr = bno055Address.A) {
+    constructor(addr = bno055Address.B) {
         super(addr, I2cDeviceType.BNO055);
     }
 }
