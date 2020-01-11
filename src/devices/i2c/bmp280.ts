@@ -192,7 +192,7 @@ this.open();
 this.writeByte(bmp280Register.BMP280_REGISTER_CONFIG, this._configReg.get());
 this.writeByte(bmp280Register.BMP280_REGISTER_CONTROL, this._measReg.get());
 console.log(this._measReg);
-
+this.delay(400);
 this.close();
 this.readMeas();
 }
@@ -202,8 +202,8 @@ readMeas(){
     this.close();
     const r = new Bmp280ctrl_meas();
     r.mode = bits_read(v,1,2);
-    r.osrs_p = bits_read(v,7,3);
-    r.osrs_t = bits_read(v,4,3);
+    r.osrs_t = bits_read(v,7,3);
+    r.osrs_p = bits_read(v,4,3);
     console.log({val:v,result:r});
     return r;
 }
