@@ -16,10 +16,11 @@ describe(' bno055 ', function() {
  
 
     it('begin() should be true', async function(done) {
+        mpu.delay(500);
         const result = mpu.begin();
    
         console.log("bno.begin");
-      expect(result).toBeTrue();
+      expect(result).toBeTruthy();
       done();
     });
     it(' mpu.getVector(BNO055Vector.VECTOR_EULER)', async function(done) {
