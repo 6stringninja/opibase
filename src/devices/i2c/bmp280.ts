@@ -104,7 +104,7 @@ enum sensor_filter {
     FILTER_X16 = 0x04
 };
 
-const standby_duration_value = [1,63,124,250,1000,2000,4000];
+const standby_duration_value = [1,63,125,250,1000,2000,4000];
 /** Standby duration in ms */
 enum standby_duration {
     /** 1 ms standby. */
@@ -160,11 +160,14 @@ export class bmp280 extends I2cBase {
     private _bmp280_calib = new bm280CalibData();
    private _measReg = new Bmp280ctrl_meas();
    private _configReg = new Bmp280config();
-    setSampling( mode: sensor_mode,
-         tempSampling: sensor_sampling,
-         pressSampling: sensor_sampling,
-         filter: sensor_filter,
-         duration: standby_duration) {
+   getDuration(){
+       return standby_duration_value[this._configReg.t_sb];
+   }
+    setSampling( mode: sensor_mode = sensor_mode.MODE_NORMAL,
+         tempSampling: sensor_sampling = sensor_sampling.SAMPLING_X4,
+         pressSampling: sensor_sampling = sensor_sampling.SAMPLING_X8,
+         filter: sensor_filter = sensor_filter.FILTER_OFF,
+         duration: standby_duration = standby_duration.STANDBY_MS_500) {
 
 this._measReg.mode = mode;
 this._measReg.osrs_t = tempSampling;

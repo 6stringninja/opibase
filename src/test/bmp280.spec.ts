@@ -27,13 +27,15 @@ describe(' bno055 ', function() {
       done();
     });
     it(' bmp.readPressure(); true', async function(done) {
+        bmp.setSampling();
+
         bmp.readCoefficients();
        const prs = bmp.readPressure();
        bmp.delay(100);
        for (let index = 0; index < 10; index++) {
         const alt = bmp.readAltitude(prs);
         console.log({m:"bmp280 pressure",prs,alt})
-        bmp.delay(100);
+        bmp.delay(bmp.getDuration());
            
        }
    
