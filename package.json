@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc   -w",
     "start": "nodemon ./build/index.js --ignore *.json",
-    "test": "jasmine --stop-on-failure=false",
+    "test": "jasmine --stop-on-failure=false --random = false",
     "test-build": "tsc -p spec -w",
     "testserver": "nodemon ./build/examples/ServerTest.js --ignore *.json",
     "testdata": "nodemon ./build/examples/DataObservableTest.js --ignore *.json",

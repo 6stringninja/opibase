@@ -34,4 +34,12 @@ describe(' bno055 ', function() {
      
      done();
    });
+   it(' bmp.readAltitude(); true', async function(done) {
+    bmp.readCoefficients();
+   const alt = bmp.readAltitude();
+  console.log({m:"bmp280 altitude",alt})
+ expect(alt).toBeDefined();
+ 
+ done();
+});
     });

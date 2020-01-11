@@ -104,6 +104,7 @@ enum sensor_filter {
     FILTER_X16 = 0x04
 };
 
+const standby_duration_value = [1,63,124,250,1000,2000,4000];
 /** Standby duration in ms */
 enum standby_duration {
     /** 1 ms standby. */
@@ -123,6 +124,31 @@ enum standby_duration {
     /** 4000 ms standby. */
     STANDBY_MS_4000 = 0x07
 };
+
+export class  Bmp280config {
+    /** Inactive duration (standby time) in normal mode */
+     t_sb :standby_duration = standby_duration.STANDBY_MS_63 ;
+    /** Filter settings */
+     filter : sensor_filter = sensor_filter.FILTER_OFF;
+    /** Unused - don't set */
+     none : number;
+    /** Enables 3-wire SPI */
+     spi3w_en : number;
+    /** Used to retrieve the assembled config register's byte value. */
+     get() { return (this.t_sb << 5) | (this.filter << 2) | this.spi3w_en; }
+  };
+
+  /** Encapsulates trhe ctrl_meas register */
+  export class Bmp280ctrl_meas {
+    /** Temperature oversampling. */
+     osrs_t : sensor_sampling = sensor_sampling.SAMPLING_X4;
+    /** Pressure oversampling. */
+     osrs_p : sensor_sampling= sensor_sampling.SAMPLING_X4;
+    /** Device mode */
+     mode : sensor_mode = sensor_mode.MODE_NORMAL;
+    /** Used to retrieve the assembled ctrl_meas register's byte value. */
+     get() { return (this.osrs_t << 5) | (this.osrs_p << 2) | this.mode; }
+  };
 export class bmp280 extends I2cBase {
     testConnection(): boolean {
         throw new Error("Method not implemented.");
@@ -132,6 +158,34 @@ export class bmp280 extends I2cBase {
         super(addr, I2cDeviceType.BMP280);
     }
     private _bmp280_calib = new bm280CalibData();
+   private _measReg = new Bmp280ctrl_meas();
+   private _configReg = new Bmp280config();
+    setSampling( mode: sensor_mode,
+         tempSampling: sensor_sampling,
+         pressSampling: sensor_sampling,
+         filter: sensor_filter,
+         duration: standby_duration) {
+
+this._measReg.mode = mode;
+this._measReg.osrs_t = tempSampling;
+this._measReg.osrs_p = pressSampling;
+
+this._configReg.filter = filter;
+this._configReg.t_sb = duration;
+
+this.writeByte(bmp280Register.BMP280_REGISTER_CONFIG, this._configReg.get());
+this.writeByte(bmp280Register.BMP280_REGISTER_CONTROL, this._measReg.get());
+}
+readAltitude( seaLevelhPa = 1013.25) {
+    let altitude:number = 0;
+  
+    let pressure = this.readPressure(); // in Si units for Pascal
+    pressure /= 100;
+  
+    altitude = 44330 * (1.0 - Math.pow(pressure / seaLevelhPa, 0.1903));
+  
+    return altitude;
+  }
     readPressure() {
         let var1:number, var2:number, p:number;
       
