@@ -5,7 +5,7 @@ export enum bmp280Address {
     B = 0x77
 }
  
-const BMP280_CHIPID  =(0x58) /**< Default chip ID. */
+export const BMP280_CHIPID  =(0x58) /**< Default chip ID. */
 
 /*!
  * Registers available on the sensor.
@@ -131,13 +131,19 @@ export class bmp280 extends I2cBase {
     constructor(addr = bmp280Address.A) {
         super(addr, I2cDeviceType.BMP280);
     }
-    begin(){
+    getDeviceId(){
         this.open();
-        if (this.readByte( bmp280Register.BMP280_REGISTER_CHIPID) != BMP280_CHIPID){
-            this.close();
+        const id = this.readByte( bmp280Register.BMP280_REGISTER_CHIPID);
+        this.close();
+        return id;
+    }
+    begin(){
+        
+        if (this.getDeviceId() != BMP280_CHIPID){
+             
             return false;
         }
-        this.close();
+         
         return true;
     /*
       readCoefficients();

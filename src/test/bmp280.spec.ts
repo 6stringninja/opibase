@@ -1,14 +1,14 @@
-import { bmp280, bmp280Address } from "../devices/i2c/bmp280";
+import { bmp280, bmp280Address, BMP280_CHIPID } from "../devices/i2c/bmp280";
 
 describe(' bno055 ', function() {
     const bmp = new bmp280(bmp280Address.A)
     beforeAll(function(){
       
     });
-     it(' bmp.begin(); true', async function(done) {
-         const deviceId = bmp.begin();
-        
-       expect(deviceId).toBe(true);
+     it(' bmp.getDeviceId(); true', async function(done) {
+         const deviceId = bmp.getDeviceId();
+        console.log({m:"bmp280",deviceId})
+       expect(deviceId).toBe(BMP280_CHIPID);
        done();
      });
     });
