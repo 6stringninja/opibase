@@ -42,17 +42,19 @@ export class bno055 extends I2cBase {
         }
       
         this.setMode(BNO055Opmode.OPERATION_MODE_CONFIG)
-        this.close();
-        return true;
+      
         	/* Reset */
     this.writeByte(BNO055Regs.BNO055_SYS_TRIGGER_ADDR, 0x20);
-    
+   
+    let cnt = 0;
 	while (this.readByte(BNO055Regs.BNO055_CHIP_ID_ADDR) != BNO055_ID)
 	{
+        console.log((cnt++)*10);
 		this.delay(10);
 	}
 	this.delay(50);
-
+    this.close();
+    return true;
 	/* Set to normal power mode */
 	this.writeByte(BNO055Regs.BNO055_PWR_MODE_ADDR, BNO055PowerMode.POWER_MODE_NORMAL);
 	this.delay(10);
