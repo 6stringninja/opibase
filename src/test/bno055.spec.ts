@@ -1,5 +1,5 @@
 import { bno055, BNO055_ID } from "../devices/i2c/bno055";
-import { bno055Address } from "../devices/i2c/bno055_types";
+import { bno055Address, BNO055Vector } from "../devices/i2c/bno055_types";
 
 fdescribe(' bno055 ', function() {
     const mpu = new bno055(bno055Address.A)
@@ -22,6 +22,13 @@ fdescribe(' bno055 ', function() {
       expect(result).toBeTrue();
       done();
     });
-
+    it(' mpu.getVector(BNO055Vector.VECTOR_EULER)', async function(done) {
+        mpu.delay(10);
+        const result = mpu.getVector(BNO055Vector.VECTOR_EULER);
+   
+        console.log({l:"getVector()",result});
+      expect(result.length).toBe(3);
+      done();
+    });
    }
 );
