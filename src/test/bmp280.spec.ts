@@ -18,12 +18,20 @@ describe(' bno055 ', function() {
       
       done();
     });
-    it(' bmp.readCoefficients(); true', async function(done) {
-        const coefs = bmp.readCoefficients();
+    it(' bmp.readTemperature(); true', async function(done) {
+         bmp.readCoefficients();
         const tmp = bmp.readTemperature();
        console.log({m:"bmp280 tmp",tmp})
       expect(tmp).toBeDefined();
       
       done();
     });
+    it(' bmp.readPressure(); true', async function(done) {
+        bmp.readCoefficients();
+       const prs = bmp.readPressure();
+      console.log({m:"bmp280 pressure",prs})
+     expect(prs).toBeDefined();
+     
+     done();
+   });
     });

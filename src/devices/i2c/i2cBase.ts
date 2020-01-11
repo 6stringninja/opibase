@@ -100,7 +100,7 @@ return r;
     }
     readBytes(command: number,   len: number): Buffer {
         this.throwErrorOnBusClosed();
-        console.log({d:"sdfsdfsdf", address: this.address,command,len})
+      //  console.log({d:"sdfsdfsdf", address: this.address,command,len})
         this.bus.readI2cBlockSync(this.address, command, len, this.buff);
         return this.buff.slice(0, len);
     }
