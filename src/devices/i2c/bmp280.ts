@@ -235,11 +235,18 @@ readAltitude( seaLevelhPa = 1013.25) {
   
     return altitude;
   }
+  once = true;
     readPressure() {
         let var1:number, var2:number, p:number;
       
         // Must be done first to get the t_fine variable set up
-        this.readTemperature();
+        if(this.once){
+            this.readTemperature();
+            this.takeMeasure();
+            this.delay(this.getDuration())
+            this.once = false;
+        }
+       
       this.open();
         let adc_P = this.readUint24(bmp280Register.BMP280_REGISTER_PRESSUREDATA);
         this.close();
