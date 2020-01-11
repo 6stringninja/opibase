@@ -40,6 +40,8 @@ export class bno055 extends I2cBase {
                 return false; // still not? ok bail
             }
         }
+        this.close();
+        return;
         this.setMode(BNO055Opmode.OPERATION_MODE_CONFIG)
 
         	/* Reset */
