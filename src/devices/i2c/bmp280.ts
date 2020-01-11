@@ -174,7 +174,7 @@ export class bmp280 extends I2cBase {
    getDuration(){
        return standby_duration_value[this._configReg.t_sb];
    }
-    setSampling( mode: sensor_mode = sensor_mode.MODE_FORCED,
+    setSampling( mode: sensor_mode = sensor_mode.MODE_NORMAL,
          tempSampling: sensor_sampling = sensor_sampling.SAMPLING_X4,
          pressSampling: sensor_sampling = sensor_sampling.SAMPLING_X8,
          filter: sensor_filter = sensor_filter.FILTER_X2,
@@ -197,6 +197,7 @@ this.close();
 this.readMeas();
 }
 takeMeasure(){
+    if(this._measReg.mode!== sensor_mode.MODE_FORCED) return;
     this.open();
     this.writeByte(bmp280Register.BMP280_REGISTER_CONTROL, this._measReg.get());
     this.close();
