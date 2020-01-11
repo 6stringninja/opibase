@@ -23,13 +23,13 @@ describe(' bno055 ', function() {
       expect(result).toBeTruthy();
       done();
     });
-    it(' mpu.getVector(BNO055Vector.VECTOR_EULER)', async function(done) {
+   /* it(' mpu.getVector(BNO055Vector.VECTOR_EULER)', async function(done) {
         mpu.delay(10);
         const result = mpu.getVector(BNO055Vector.VECTOR_EULER);
    
         console.log({l:"getVector()",result});
       expect(result.length).toBe(3);
       done();
-    });
+    });**/
    }
 );
