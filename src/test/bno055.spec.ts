@@ -2,7 +2,7 @@ import { bno055, BNO055_ID } from "../devices/i2c/bno055";
 import { bno055Address, BNO055Vector } from "../devices/i2c/bno055_types";
 
 describe(' bno055 ', function() {
-    const mpu = new bno055(bno055Address.A)
+    const mpu = new bno055(bno055Address.B)
     beforeAll(function(){
       
     });
