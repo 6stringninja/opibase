@@ -1,6 +1,7 @@
 
 import { I2cBase, I2cDeviceType } from "./i2cBase";
 import { bno055Address, BNO055Regs, BNO055Opmode, BNO055PowerMode, BNO055Vector } from "./bno055_types";
+import { serialize } from "v8";
 
 /** BNO055 ID **/
 export const BNO055_ID = (0xA0)
@@ -30,9 +31,11 @@ export class bno055 extends I2cBase {
         this.open();
         let id = this.readByte(BNO055Regs.BNO055_CHIP_ID_ADDR);
         if (id != BNO055_ID) {
+            console.log({id})
             this.delay(1000); // hold on for boot
             id = this.readByte(BNO055Regs.BNO055_CHIP_ID_ADDR);
             if (id != BNO055_ID) {
+                console.log({id})
                 this.close();
                 return false; // still not? ok bail
             }
