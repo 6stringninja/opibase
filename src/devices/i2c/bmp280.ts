@@ -182,7 +182,7 @@ readAltitude( seaLevelhPa = 1013.25) {
     let pressure = this.readPressure(); // in Si units for Pascal
     pressure /= 100;
   
-    altitude = 44330 * (1.0 - Math.pow(pressure / seaLevelhPa, 0.1903));
+    altitude = 44330 * (1.0 - Math.pow(pressure / (seaLevelhPa * 0.1), 0.1903));
   
     return altitude;
   }
