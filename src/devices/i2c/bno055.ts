@@ -20,14 +20,17 @@ export class bno055 extends I2cBase {
         return bnoId;
     }
     begin() {
+        this.open();
         let id = this.readByte(BNO055Regs.BNO055_CHIP_ID_ADDR);
         if (id != BNO055_ID) {
             this.delay(1000); // hold on for boot
             id = this.readByte(BNO055Regs.BNO055_CHIP_ID_ADDR);
             if (id != BNO055_ID) {
+                this.close();
                 return false; // still not? ok bail
             }
         }
+        this.close();
         return true;
     }
     constructor(addr = bno055Address.A) {
