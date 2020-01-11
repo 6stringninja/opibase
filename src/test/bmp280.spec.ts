@@ -29,7 +29,10 @@ describe(' bno055 ', function() {
     it(' bmp.readPressure(); true', async function(done) {
         bmp.readCoefficients();
        const prs = bmp.readPressure();
+       bmp.delay(100);
+       const alt = bmp.readAltitude();
       console.log({m:"bmp280 pressure",prs})
+      console.log({m:"bmp280 altitude",alt})
      expect(prs).toBeDefined();
      
      done();
