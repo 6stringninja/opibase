@@ -131,6 +131,25 @@ export class bmp280 extends I2cBase {
     constructor(addr = bmp280Address.A) {
         super(addr, I2cDeviceType.BMP280);
     }
+    private _bmp280_calib = new bm280CalibData();
+    readCoefficients(){
+        this.open();
+        this._bmp280_calib.dig_T1 = this.readUint16LE(bmp280Register.BMP280_REGISTER_DIG_T1);
+        this._bmp280_calib.dig_T2 = this.readInt16LE(bmp280Register.BMP280_REGISTER_DIG_T2);
+        this._bmp280_calib.dig_T3 = this.readInt16LE(bmp280Register.BMP280_REGISTER_DIG_T3);
+      
+        this._bmp280_calib.dig_P1 = this.readUint16LE(bmp280Register.BMP280_REGISTER_DIG_P1);
+        this._bmp280_calib.dig_P2 = this.readInt16LE(bmp280Register.BMP280_REGISTER_DIG_P2);
+        this._bmp280_calib.dig_P3 = this.readInt16LE(bmp280Register.BMP280_REGISTER_DIG_P3);
+        this._bmp280_calib.dig_P4 = this.readInt16LE(bmp280Register.BMP280_REGISTER_DIG_P4);
+        this._bmp280_calib.dig_P5 = this.readInt16LE(bmp280Register.BMP280_REGISTER_DIG_P5);
+        this._bmp280_calib.dig_P6 = this.readInt16LE(bmp280Register.BMP280_REGISTER_DIG_P6);
+        this._bmp280_calib.dig_P7 = this.readInt16LE(bmp280Register.BMP280_REGISTER_DIG_P7);
+        this._bmp280_calib.dig_P8 = this.readInt16LE(bmp280Register.BMP280_REGISTER_DIG_P8);
+        this._bmp280_calib.dig_P9 = this.readInt16LE(bmp280Register.BMP280_REGISTER_DIG_P9);
+        this.close();
+        return this._bmp280_calib;
+    }
     getDeviceId(){
         this.open();
         const id = this.readByte( bmp280Register.BMP280_REGISTER_CHIPID);
