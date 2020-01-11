@@ -50,15 +50,21 @@ export class bno055 extends I2cBase {
     this.close();
    
     let cnt = 0;
+    this.delay(100);
     this.open();
-	while (this.readByte(BNO055Regs.BNO055_CHIP_ID_ADDR) != BNO055_ID)
+        let chipId = this.readByte(BNO055Regs.BNO055_CHIP_ID_ADDR);
+    this.close();
+	while (chipId !== BNO055_ID)
 	{
-        this.close()
+
+       
         console.log((cnt++)*10);
         this.delay(10);
         this.open();
-    }
+        let chipId = this.readByte(BNO055Regs.BNO055_CHIP_ID_ADDR);
     this.close();
+    }
+   
 	this.delay(50);
     return true;
 	/* Set to normal power mode */
