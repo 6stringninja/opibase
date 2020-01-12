@@ -16,7 +16,7 @@ export class OptPlatform{
   gpsUart?:IConfigUart;
   telsUart?:IConfigUart;
   public get hasMcu() {
-    return !!this.mcuUart && this.ports.some(s=> s.comName === this.mcuUart.portName);
+    return !!this.mcuUart && this.ports.some(s=> s.path === this.mcuUart.portName);
   }
   public get hasGps() {
     return !!this.gpsUart && this.ports.some(s=> s.comName === this.gpsUart.portName);
