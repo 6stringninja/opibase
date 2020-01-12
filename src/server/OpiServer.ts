@@ -3,7 +3,8 @@ import { DebugDataObservable, DebugMsg, DebugSeverityType } from "./DebugSocketS
 import { OptPlatform } from "..";
 import SerialPort = require("serialport");
 import { IConfigUart } from "../config/IConfig";
-import Readline from '@serialport/parser-readline';
+import Readline = require('@serialport/parser-readline');
+import ByteLength from '@serialport/parser-byte-length';
 export enum OpiUartFunction {
     MCU = "MCU",
     GPS = "GPS",
@@ -20,6 +21,7 @@ export class OpiServerState extends ServerClientState<OpiClientState>{
 }
 export class OpiSerial {
     port?: SerialPort;
+    parser?: any;
     constructor(public uartType: OpiUartFunction, public enabled: boolean, public config?: IConfigUart) {
 
     }
@@ -45,8 +47,19 @@ export class OpiServer extends ServerBase<OpiClientState, OpiServerState> {
     private initSerial() {
         this.ports.forEach(p => {
             if (p.enabled) {
-                p.port = new SerialPort(p.config.portName, { baudRate: p.config.portBaud, autoOpen: true });
-                const parser = p.port.pipe(new Readline({ delimiter: '\r\n' }))
+               
+                    p.port = new SerialPort(p.config.portName, { baudRate: p.config.portBaud, autoOpen: true },
+                        function (err) {
+                            if (err) {
+                              return console.log('Error: ', err.message)
+                            }
+                            p.parser =  p.port.pipe(new ByteLength({length: 8}))
+                            
+                           //   p.parser = p.port.pipe(new Readline({ delimiter: '\r\n' })) ;
+                          });
+                   
+              
+            
 
             }
         });
