@@ -11,17 +11,18 @@ import { OpiServer, OpiUartFunction } from './server/OpiServer.js';
 import os from "os";
 
 export class OptPlatform{
+  ports: SerialPort.PortInfo[]=[];
   mcuUart?:IConfigUart;
   gpsUart?:IConfigUart;
   telsUart?:IConfigUart;
   public get hasMcu() {
-    return !!this.mcuUart;
+    return !!this.mcuUart && this.ports.some(s=> s.comName === this.mcuUart.portName);
   }
   public get hasGps() {
-    return !!this.gpsUart;
+    return !!this.gpsUart && this.ports.some(s=> s.comName === this.gpsUart.portName);
   }
   public get hasTel() {
-    return !!this.telsUart;
+    return !!this.telsUart  && this.ports.some(s=> s.comName === this.telsUart.portName);
   }
   platform="";
   hostname="";
@@ -31,7 +32,7 @@ const hostName = os.hostname();
 const platform = os.platform();
 optPlatform.hostname = hostName;
 optPlatform.platform = platform;
-let configHost = configApp.hosts.find(f=> f.platform===platform);
+let configHost = configApp.hosts.find(f=> f.platform.toLowerCase()===platform.toLowerCase());
 if(!configHost){
   configHost = configApp.hosts.find(f=> f.platform==="Linux");
 
@@ -44,7 +45,10 @@ console.log({hostName,platform})
  SerialPort.list().then((port) => {
    console.log({})
   console.log("Port: ", port);
-   console.log({platform,hostName})
+   console.log({platform,hostName}) 
+   optPlatform.ports = port;
+   
+   console.log({mcu:optPlatform.hasMcu, gps:optPlatform.hasGps, tel:optPlatform.hasTel })
    const ts = new OpiServer(optPlatform);
    
  });

@@ -39,19 +39,19 @@
     "portFunction": "MCU",
     "portName":"/dev/ttyS2'",
     "portBaud":115200,
-    "enabled" :false
+    "enabled" :true
 },
 {
     "portFunction": "GPS",
     "portName":"/dev/ttyS1'",
     "portBaud":9600,
-    "enabled" :false
+    "enabled" :true
 },
 {
     "portFunction": "TEL",
     "portName":"/dev/ttyUSB0'",
     "portBaud":57800,
-    "enabled" :false
+    "enabled" :true
 }
             ]
         }
