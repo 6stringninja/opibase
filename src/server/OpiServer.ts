@@ -33,8 +33,8 @@ export class OpiServer extends ServerBase<OpiClientState, OpiServerState> {
         }, 42220);
         this.ports = [
             new OpiSerial(OpiUartFunction.MCU, this.optPlatform.hasMcu, this.optPlatform.mcuUart),
-            new OpiSerial(OpiUartFunction.MCU, this.optPlatform.hasGps, this.optPlatform.gpsUart),
-            new OpiSerial(OpiUartFunction.MCU, this.optPlatform.hasTel, this.optPlatform.telsUart)
+            new OpiSerial(OpiUartFunction.GPS, this.optPlatform.hasGps, this.optPlatform.gpsUart),
+            new OpiSerial(OpiUartFunction.TEL, this.optPlatform.hasTel, this.optPlatform.telsUart)
         ];
         this.initSerial();
 
