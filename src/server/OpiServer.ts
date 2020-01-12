@@ -55,7 +55,7 @@ export class OpiServer extends ServerBase<OpiClientState, OpiServerState> {
                             }
                             p.parser =  p.port.pipe(new ByteLength({length: 8}))
 
-                            p.port.on('data', function (data) {
+                            p.parser.on('data', function (data) {
                                 var arz = [];
 for(var x =0;x<8;x++){
 arz.push(data.readUInt8(x));
