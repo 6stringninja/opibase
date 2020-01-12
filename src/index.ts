@@ -1,20 +1,54 @@
 import { Socket } from 'socket.io';
 
 import configData from './config/config.json'
-import { IConfig } from './config/IConfig';
-export const configApp = configData as IConfig;
+import { IConfig, IConfigUart } from './config/IConfig';
+export const configApp = (configData as unknown) as IConfig;
 
 console.log({configApp})
 const Readline = require('@serialport/parser-readline')
 import SerialPort from 'serialport';
-import { OpiServer } from './server/OpiServer.js';
+import { OpiServer, OpiUartFunction } from './server/OpiServer.js';
+import os from "os";
 
+export class OptPlatform{
+  mcuUart?:IConfigUart;
+  gpsUart?:IConfigUart;
+  telsUart?:IConfigUart;
+  public get hasMcu() {
+    return !!this.mcuUart;
+  }
+  public get hasGps() {
+    return !!this.gpsUart;
+  }
+  public get hasTel() {
+    return !!this.telsUart;
+  }
+  platform="";
+  hostname="";
+}
+const optPlatform = new OptPlatform();
+const hostName = os.hostname();
+const platform = os.platform();
+optPlatform.hostname = hostName;
+optPlatform.platform = platform;
+let configHost = configApp.hosts.find(f=> f.platform===platform);
+if(!configHost){
+  configHost = configApp.hosts.find(f=> f.platform==="Linux");
 
+}
+optPlatform.mcuUart = configHost.uarts.find(s=> s.portFunction ===OpiUartFunction.MCU.toString() && s.enabled);
+optPlatform.gpsUart = configHost.uarts.find(s=> s.portFunction ===OpiUartFunction.GPS.toString() && s.enabled) ;
+optPlatform.telsUart = configHost.uarts.find(s=> s.portFunction ===OpiUartFunction.TEL.toString() && s.enabled);
 console.log("it worked");
-  
+console.log({hostName,platform})
  SerialPort.list().then((port) => {
-   console.log("Port: ", port);
+   console.log({})
+  console.log("Port: ", port);
+   console.log({platform,hostName})
+   const ts = new OpiServer(optPlatform);
+   
  });
+ 
 
 export class SerialServer {
    
@@ -79,5 +113,5 @@ export class SerialServer {
 
 
 }
-const ts = new OpiServer();
+
 //const server = new SerialServer();

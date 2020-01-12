@@ -5,5 +5,56 @@
     },
     "http":{
         "port":43001
-    }
+    },
+    "hosts":[
+        {
+            "platform":"Win32",
+            "hostName":"DOUGR2-PC",
+            "uarts":[
+{
+    "portFunction": "MCU",
+    "portName":"COM40",
+    "portBaud":115200,
+    "enabled" :false
+},
+{
+    "portFunction": "GPS",
+    "portName":"non",
+    "portBaud":9600,
+    "enabled" :false
+},
+{
+    "portFunction": "TEL",
+    "portName":"",
+    "portBaud":9600,
+    "enabled" :false
+}
+            ]
+        },
+        {
+            "platform":"Linux",
+            "hostName":"DOUGR2-PC",
+            "uarts":[
+{
+    "portFunction": "MCU",
+    "portName":"/dev/ttyS2'",
+    "portBaud":115200,
+    "enabled" :false
+},
+{
+    "portFunction": "GPS",
+    "portName":"/dev/ttyS1'",
+    "portBaud":9600,
+    "enabled" :false
+},
+{
+    "portFunction": "TEL",
+    "portName":"/dev/ttyUSB0'",
+    "portBaud":57800,
+    "enabled" :false
+}
+            ]
+        }
+
+    ]
 }

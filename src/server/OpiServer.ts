@@ -1,6 +1,12 @@
 import { ServerBase, ServerClientState } from "../ServerBase";
 import {  DebugDataObservable, DebugMsg, DebugSeverityType } from "./DebugSocketServer";
+import { OptPlatform } from "..";
 
+export enum OpiUartFunction{
+    MCU="MCU",
+    GPS="GPS",
+    TEL="TEL"
+}
 export class OpiClientState {
     msgs:DebugMsg[] = [];
 }
@@ -12,7 +18,7 @@ export class OpiServerState extends ServerClientState<OpiClientState>{
 }
 export class OpiServer extends ServerBase<OpiClientState, OpiServerState> {
     errors$ = new DebugDataObservable();
-    constructor() {
+    constructor(public optPlatform:OptPlatform) {
         super((socket: SocketIO.Socket) => {
             return this.getServerState(socket);
         }, 42220);
