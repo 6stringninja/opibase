@@ -1,4 +1,4 @@
-import { mpu6050, mpu6050Address, mpu6050Register, mpu6050ClockSource, mpu6050AccRange, mpu6050GyroRange, mpu6050DigitalLowPassFilter } from "../devices/i2c/mpu6050";
+/*import { mpu6050, mpu6050Address, mpu6050Register, mpu6050ClockSource, mpu6050AccRange, mpu6050GyroRange, mpu6050DigitalLowPassFilter } from "../devices/i2c/mpu6050";
 
 describe(' mpu6050 ', function() {
    const mpu = new mpu6050(mpu6050Address.A)
@@ -139,3 +139,4 @@ it('getRotationScaled', async function(done) {
    done();
  });
   });
+  */

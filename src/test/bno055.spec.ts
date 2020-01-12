@@ -1,4 +1,4 @@
-import { bno055, BNO055_ID } from "../devices/i2c/bno055";
+/*import { bno055, BNO055_ID } from "../devices/i2c/bno055";
 import { bno055Address, BNO055Vector } from "../devices/i2c/bno055_types";
 
 describe(' bno055 ', function() {
@@ -30,6 +30,7 @@ describe(' bno055 ', function() {
         console.log({l:"getVector()",result});
       expect(result.length).toBe(3);
       done();
-    });**/
-   }
+    }); 
+  }
 );
+*/

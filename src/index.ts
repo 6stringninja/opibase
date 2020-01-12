@@ -7,6 +7,7 @@ export const configApp = configData as IConfig;
 console.log({configApp})
 const Readline = require('@serialport/parser-readline')
 import SerialPort from 'serialport';
+import { OpiServer } from './server/OpiServer.js';
 
 
 console.log("it worked");
@@ -78,4 +79,5 @@ export class SerialServer {
 
 
 }
+const ts = new OpiServer();
 //const server = new SerialServer();

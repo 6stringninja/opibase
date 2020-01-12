@@ -1,4 +1,4 @@
-import { bmp280, bmp280Address, BMP280_CHIPID } from "../devices/i2c/bmp280";
+/*import { bmp280, bmp280Address, BMP280_CHIPID } from "../devices/i2c/bmp280";
 
 describe(' bno055 ', function() {
     const bmp = new bmp280(bmp280Address.A)
@@ -55,4 +55,4 @@ describe(' bno055 ', function() {
  
  done();
 });
-    });
+    }); */
