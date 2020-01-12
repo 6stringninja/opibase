@@ -18,40 +18,40 @@ export class OpiServerState extends ServerClientState<OpiClientState>{
         super(socket, () => new OpiClientState());
     }
 }
-export class OpiSerial{
+export class OpiSerial {
     port?: SerialPort;
-    constructor( public uartType:OpiUartFunction, public enabled:boolean,public config?:IConfigUart){
+    constructor(public uartType: OpiUartFunction, public enabled: boolean, public config?: IConfigUart) {
 
     }
 }
 export class OpiServer extends ServerBase<OpiClientState, OpiServerState> {
     errors$ = new DebugDataObservable();
-    ports:OpiSerial[]=[];
+    ports: OpiSerial[] = [];
     constructor(public optPlatform: OptPlatform) {
         super((socket: SocketIO.Socket) => {
             return this.getServerState(socket);
         }, 42220);
         this.ports = [
-            new OpiSerial(OpiUartFunction.MCU,this.optPlatform.hasMcu,this.optPlatform.mcuUart),
-            new OpiSerial(OpiUartFunction.MCU,this.optPlatform.hasGps,this.optPlatform.gpsUart),
-            new OpiSerial(OpiUartFunction.MCU,this.optPlatform.hasTel,this.optPlatform.telsUart)
+            new OpiSerial(OpiUartFunction.MCU, this.optPlatform.hasMcu, this.optPlatform.mcuUart),
+            new OpiSerial(OpiUartFunction.MCU, this.optPlatform.hasGps, this.optPlatform.gpsUart),
+            new OpiSerial(OpiUartFunction.MCU, this.optPlatform.hasTel, this.optPlatform.telsUart)
         ];
-   
-        
+        this.initSerial();
+
     }
-    private getPort(opif:OpiUartFunction){
-        return this.ports.find(f=> f.uartType===opif).port;
+    private getPort(opif: OpiUartFunction) {
+        return this.ports.find(f => f.uartType === opif).port;
     }
-    private initSerial(){
-        this.ports.forEach(p=>{
-            if(p.enabled){
-                p.port = new SerialPort(p.config.portName,{baudRate: p.config.portBaud,autoOpen:true});
+    private initSerial() {
+        this.ports.forEach(p => {
+            if (p.enabled) {
+                p.port = new SerialPort(p.config.portName, { baudRate: p.config.portBaud, autoOpen: true });
                 const parser = p.port.pipe(new Readline({ delimiter: '\r\n' }))
-               
+
             }
         });
-        if(this.optPlatform.hasMcu){
-this.getPort(OpiUartFunction.MCU).open()
+        if (this.optPlatform.hasMcu) {
+            this.getPort(OpiUartFunction.MCU).open()
         }
     }
     private getServerState(socket) {
