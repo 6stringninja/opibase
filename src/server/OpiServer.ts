@@ -48,13 +48,13 @@ export class OpiServer extends ServerBase<OpiClientState, OpiServerState> {
         this.ports.forEach(p => {
             if (p.enabled) {
                
-                    p.port = new SerialPort(p.config.portName, { baudRate: p.config.portBaud, autoOpen: true },
+                    p.port = new SerialPort(p.config.portName, { baudRate:9600, autoOpen: true },
                         function (err) {
                             if (err) {
                               return console.log('Error: ', err.message)
                             }
                             p.parser =  p.port.pipe(new ByteLength({length: 8}))
-                            
+                            console.log("connected connected")
                            //   p.parser = p.port.pipe(new Readline({ delimiter: '\r\n' })) ;
                           });
                    

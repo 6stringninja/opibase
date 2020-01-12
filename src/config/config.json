@@ -25,9 +25,9 @@
 },
 {
     "portFunction": "TEL",
-    "portName":"",
-    "portBaud":9600,
-    "enabled" :false
+    "portName":"COM7",
+    "portBaud":57600,
+    "enabled" :true
 }
             ]
         },
