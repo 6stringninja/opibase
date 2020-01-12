@@ -39,7 +39,7 @@
     "portFunction": "MCU",
     "portName":"/dev/ttyS2",
     "portBaud":115200,
-    "enabled" :true
+    "enabled" :false
 },
 {
     "portFunction": "GPS",
