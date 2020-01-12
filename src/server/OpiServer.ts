@@ -53,16 +53,16 @@ export class OpiServer extends ServerBase<OpiClientState, OpiServerState> {
                             if (err) {
                               return console.log('Error: ', err.message)
                             }
-                            p.parser = p.port.pipe(new Readline({ delimiter: '\r\n' })) 
-                          //  p.parser =  p.port.pipe(new ByteLength({length: 8}))
+                           // p.parser = p.port.pipe(new Readline({ delimiter: '\r\n' })) 
+                            p.parser =  p.port.pipe(new ByteLength({length: 8}))
 
                             p.parser.on('data', function (data) {
-                              /*  var arz = [];
+                                var arz = [];
 for(var x =0;x<8;x++){
 arz.push(data.readUInt8(x));
-}*/
+}
 
-                                console.log({portname:p.config.portName,baud:p.config.portBaud,data})
+                                console.log({portname:p.config.portName,baud:p.config.portBaud,data:arz})
                               })
                             console.log("connected connected")
                            //   p.parser = p.port.pipe(new Readline({ delimiter: '\r\n' })) ;
