@@ -50,9 +50,7 @@ export class OpiServer extends ServerBase<OpiClientState, OpiServerState> {
 
             }
         });
-        if (this.optPlatform.hasMcu) {
-            this.getPort(OpiUartFunction.MCU).open()
-        }
+       
     }
     private getServerState(socket) {
         const prm = new Promise<OpiServerState>((r) => {
