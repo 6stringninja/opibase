@@ -37,19 +37,19 @@
             "uarts":[
 {
     "portFunction": "MCU",
-    "portName":"/dev/ttyS2'",
+    "portName":"/dev/ttyS2",
     "portBaud":115200,
     "enabled" :true
 },
 {
     "portFunction": "GPS",
-    "portName":"/dev/ttyS1'",
+    "portName":"/dev/ttyS1",
     "portBaud":9600,
     "enabled" :true
 },
 {
     "portFunction": "TEL",
-    "portName":"/dev/ttyUSB0'",
+    "portName":"/dev/ttyUSB0",
     "portBaud":57800,
     "enabled" :true
 }
