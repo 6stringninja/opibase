@@ -15,7 +15,7 @@ export class OpiSerialPorts {
         ];
         this.initSerial();
     }
-    public dataObservable(t: OpiUartFunction) {
+    public findDataObservable(t: OpiUartFunction) {
         this.ports.find(f => f.uartType === t).data;
     }
     private initSerial() {
