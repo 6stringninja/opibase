@@ -45,13 +45,13 @@
     "portFunction": "GPS",
     "portName":"/dev/ttyS2",
     "portBaud":9600,
-    "enabled" :true
+    "enabled" :false
 },
 {
     "portFunction": "TEL",
     "portName":"/dev/ttyUSB0",
     "portBaud":57800,
-    "enabled" :true
+    "enabled" :false
 }
             ]
         }
