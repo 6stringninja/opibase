@@ -1,7 +1,7 @@
 import { Socket } from 'socket.io';
 
 import configData from './config/config.json'
-import { IConfig, IConfigUart } from './config/IConfig';
+import { IConfig } from './config/IConfig';
 export const configApp = (configData as unknown) as IConfig;
 
 console.log({configApp})
@@ -9,24 +9,8 @@ const Readline = require('@serialport/parser-readline')
 import SerialPort from 'serialport';
 import { OpiServer, OpiUartFunction } from './server/OpiServer.js';
 import os from "os";
+import { OptPlatform } from './OptPlatform';
 
-export class OptPlatform{
-  ports: SerialPort.PortInfo[]=[];
-  mcuUart?:IConfigUart;
-  gpsUart?:IConfigUart;
-  telsUart?:IConfigUart;
-  public get hasMcu() {
-    return !!this.mcuUart && this.ports.some(s=> s.comName === this.mcuUart.portName);
-  }
-  public get hasGps() {
-    return !!this.gpsUart && this.ports.some(s=> s.comName === this.gpsUart.portName);
-  }
-  public get hasTel() {
-    return !!this.telsUart  && this.ports.some(s=> s.comName === this.telsUart.portName);
-  }
-  platform="";
-  hostname="";
-}
 const optPlatform = new OptPlatform();
 const hostName = os.hostname();
 const platform = os.platform();

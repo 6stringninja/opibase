@@ -1,13 +1,14 @@
 import { ServerBase, ServerClientState } from "../ServerBase";
 import { DebugDataObservable, DebugMsg, DebugSeverityType } from "./DebugSocketServer";
-import { OptPlatform } from "..";
+ 
 import SerialPort = require("serialport");
 import { IConfigUart } from "../config/IConfig";
 import Readline = require('@serialport/parser-readline');
 import ByteLength from '@serialport/parser-byte-length';
 import { ConcealedBehaviorSubject } from "../rx/ConcealedBehaviorSubject";
-import { ConcealedSubject } from "../rx/ConcealedSubject";
+import { ConcealedSubject, IConcealedSubject } from "../rx/ConcealedSubject";
 import { Observable } from "rxjs";
+import { OptPlatform } from "../OptPlatform";
 export enum OpiUartFunction {
     MCU = "MCU",
     GPS = "GPS",
@@ -22,37 +23,34 @@ export class OpiServerState extends ServerClientState<OpiClientState>{
         super(socket, () => new OpiClientState());
     }
 }
-export class OpiSerial {
+export class OpiSerial<T> {
     port?: SerialPort;
     parser?: any;
+    private _rawDataCs: IConcealedSubject<T>;
+    public get rawDataCs(): IConcealedSubject<T> {
+        return this._rawDataCs;
+    }
+    public set rawDataCs(value: IConcealedSubject<T>) {
+        this._rawDataCs = value;
+        this.data = this.rawDataCs.observable;
+    }
+    data?: Observable<T>;
     constructor(public uartType: OpiUartFunction, public enabled: boolean, public config?: IConfigUart) {
 
     }
 }
 export class OpiServer extends ServerBase<OpiClientState, OpiServerState> {
     errors$ = new DebugDataObservable();
-    ports: OpiSerial[] = [];
-    mcuRawDataCs: ConcealedSubject<number[]>;
-    public get mcuRawData$(): Observable<number[]> {
-        return this.mcuRawDataCs.observable;;
-    }
-    gpsRawDataCs = new ConcealedSubject<string>();
-    public get gpsRawData$() {
-       
-        return this.gpsRawDataCs.observable;;
-    }
-    telRawDataCs = new ConcealedSubject<string>();
-    public get telRawData$() {
-        return this.telRawDataCs.observable;;
-    }
+    ports: OpiSerial<any>[] = [];
+ 
     constructor(public optPlatform: OptPlatform) {
         super((socket: SocketIO.Socket) => {
             return this.getServerState(socket);
         }, 42220);
         this.ports = [
-            new OpiSerial(OpiUartFunction.MCU, this.optPlatform.hasMcu, this.optPlatform.mcuUart),
-            new OpiSerial(OpiUartFunction.GPS, this.optPlatform.hasGps, this.optPlatform.gpsUart),
-            new OpiSerial(OpiUartFunction.TEL, this.optPlatform.hasTel, this.optPlatform.telsUart)
+            new OpiSerial<number[]>(OpiUartFunction.MCU, this.optPlatform.hasMcu, this.optPlatform.mcuUart),
+            new OpiSerial<string>(OpiUartFunction.GPS, this.optPlatform.hasGps, this.optPlatform.gpsUart),
+            new OpiSerial<string>(OpiUartFunction.TEL, this.optPlatform.hasTel, this.optPlatform.telsUart)
         ];
         this.initSerial();
 
@@ -72,7 +70,9 @@ export class OpiServer extends ServerBase<OpiClientState, OpiServerState> {
                         var arz: any
                         switch (p.uartType) {
                             case OpiUartFunction.MCU:
-                                this.mcuRawDataCs =  new ConcealedSubject<number[]>();
+                             //   this.mcuRawDataCs =  new ConcealedSubject<number[]>();
+                                p.rawDataCs = new ConcealedSubject<number[]>();
+                               
                                 p.parser = p.port.pipe(new ByteLength({length:8}));
                                 p.parser.on('data',  (data)=> {
                                    
@@ -81,30 +81,31 @@ export class OpiServer extends ServerBase<OpiClientState, OpiServerState> {
                                     for (var x = 0; x < 8; x++) {
                                         res.push(data.readUInt8(x));
                                     }
-                                    this.mcuRawDataCs.next(res);
+                                     p.rawDataCs.next(res);
                                 });
-                                this.mcuRawData$.subscribe(s=>console.log({obg:s}));
+                                p.data.subscribe(s=>console.log({obg:s}));
                                 break;
 
                             default:
                                 p.parser = p.port.pipe(new Readline({ delimiter: '\r\n' }));
+                                p.rawDataCs = new ConcealedSubject<string>();
                                 if (p.uartType===OpiUartFunction.GPS){
                                    
                                     p.parser.on('data',  (data) =>{
                                    //     p.parser.mcuGpsCs.next(data);
-                                        
+                                        p.rawDataCs.next(data);
                                     });
                                 }
                                 else if (p.uartType===OpiUartFunction.TEL) {
                                     p.parser.on('data',  (data) => {
                                     //    p.parser.mcuTelCs.next(data);
-                                        
+                                    p.rawDataCs.next(data);
                                     });
                                 }
                                 break;
                         }
  
-
+// DEBUG
                         p.parser.on('data', function (data) {
 
                             if (p.uartType !== OpiUartFunction.GPS) {
