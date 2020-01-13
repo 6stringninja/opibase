@@ -7,6 +7,7 @@ import Readline = require('@serialport/parser-readline');
 import ByteLength from '@serialport/parser-byte-length';
 import { ConcealedBehaviorSubject } from "../rx/ConcealedBehaviorSubject";
 import { ConcealedSubject } from "../rx/ConcealedSubject";
+import { Observable } from "rxjs";
 export enum OpiUartFunction {
     MCU = "MCU",
     GPS = "GPS",
@@ -32,7 +33,7 @@ export class OpiServer extends ServerBase<OpiClientState, OpiServerState> {
     errors$ = new DebugDataObservable();
     ports: OpiSerial[] = [];
     mcuRawDataCs = new ConcealedSubject<number[]>();
-    public get mcuRawData$() {
+    public get mcuRawData$(): Observable<number[]> {
         return this.mcuRawDataCs.observable;;
     }
     gpsRawDataCs = new ConcealedSubject<string>();
@@ -64,7 +65,7 @@ export class OpiServer extends ServerBase<OpiClientState, OpiServerState> {
             if (p.enabled) {
 
                 p.port = new SerialPort(p.config.portName, { baudRate: p.config.portBaud, autoOpen: true },
-                    function (err) {
+                     (err) => {
                         if (err) {
                             return console.log('Error: ', err.message)
                         }
@@ -73,8 +74,11 @@ export class OpiServer extends ServerBase<OpiClientState, OpiServerState> {
                             case OpiUartFunction.MCU:
                                 p.parser = p.port.pipe(new ByteLength());
                                 p.parser.on('data',  (data)=> {
-                                    this.mcuRawDataCs.next(data);
-                                    
+                                    var res :number[] = [];
+                                    for (var x = 0; x < 8; x++) {
+                                        res.push(data.readUInt8(x));
+                                    }
+                                    this.mcuRawDataCs.next(res);
                                 });
                                 this.mcuRawData$.subscribe(s=>console.log({obg:s}));
                                 break;
@@ -101,10 +105,7 @@ export class OpiServer extends ServerBase<OpiClientState, OpiServerState> {
                         p.parser.on('data', function (data) {
 
                             if (p.uartType !== OpiUartFunction.GPS) {
-                                arz = [];
-                                for (var x = 0; x < 8; x++) {
-                                    arz.push(data.readUInt8(x));
-                                }
+                              
                             } else {
                                 arz = data;
                             }
