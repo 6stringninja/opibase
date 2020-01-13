@@ -1,6 +1,6 @@
 import SerialPort = require("serialport");
 import { IConfigUart } from "../../config/IConfig";
-import { IConcealedSubject } from "../../rx/ConcealedSubject";
+import { IConcealedSubject, ConcealedSubject } from "../../rx/ConcealedSubject";
 import { Observable } from "rxjs";
 import { OpiUartFunction } from "./OpiUartFunction";
 export class OpiSerial<T> {
@@ -17,5 +17,6 @@ export class OpiSerial<T> {
         return this.rawDataCs.observable;
     }
     constructor(public uartType: OpiUartFunction, public enabled: boolean, public config?: IConfigUart) {
+        this.rawDataCs = new ConcealedSubject<any>();
     }
 }
