@@ -73,12 +73,12 @@ export class OpiServer extends ServerBase<OpiClientState, OpiServerState> {
                         switch (p.uartType) {
                             case OpiUartFunction.MCU:
                                 this.mcuRawDataCs =  new ConcealedSubject<number[]>();
-                                p.parser = p.port.pipe(new ByteLength());
+                                p.parser = p.port.pipe(new ByteLength({length:8}));
                                 p.parser.on('data',  (data)=> {
                                    
                                     
                                     var res :number[] = [];
-                                    for (var x = 0; x < data.length; x++) {
+                                    for (var x = 0; x < 8; x++) {
                                         res.push(data.readUInt8(x));
                                     }
                                     this.mcuRawDataCs.next(res);
