@@ -69,7 +69,7 @@ export class OpiServer extends ServerBase<OpiClientState, OpiServerState> {
 
                         p.parser.on('data', function (data) {
 
-                            if (p.uartType === OpiUartFunction.GPS) {
+                            if (p.uartType !== OpiUartFunction.GPS) {
                                 arz = [];
                                 for (var x = 0; x < 8; x++) {
                                     arz.push(data.readUInt8(x));
