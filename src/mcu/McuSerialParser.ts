@@ -75,7 +75,7 @@ export class McuSerialParser extends SerialParserBase<number[]>{
     private buffOutIndex = 3;
     public resetOutBuffer(){
         this.buffOut.writeUInt32BE(McuSerialParser.OPI_START_B,0);
-        this.buffOut.writeUInt8(0,McuSerialParser.OPI_START_B);
+        this.buffOut.writeUInt8(McuSerialParser.OPI_START_B,0);
         this.buffIndex = 3;
         
     }
@@ -96,39 +96,39 @@ export class McuSerialParser extends SerialParserBase<number[]>{
     }
  
     public writeOutUint8( data:number){
-        this.buff.writeUInt8(data,this.buffOutIndex );
+        this.buffOut.writeUInt8(data,this.buffOutIndex );
         this.buffOutIndex+=1;
     }
     public writeOutInt8( data:number){
-        this.buff.writeInt8(data,this.buffOutIndex );
+        this.buffOut.writeInt8(data,this.buffOutIndex );
         this.buffOutIndex+=1;
     }
     public writeOutUint16( data:number){
-        this.buff.writeUInt16LE(data,this.buffOutIndex );
+        this.buffOut.writeUInt16LE(data,this.buffOutIndex );
         this.buffOutIndex+=2;
     }
     public writeOutInt16( data:number){
-        this.buff.writeInt16LE(data,this.buffOutIndex );
+        this.buffOut.writeInt16LE(data,this.buffOutIndex );
         this.buffOutIndex+=2;
     }
     public writeOutUint32( data:number){
-        this.buff.writeUInt32LE(data,this.buffOutIndex );
+        this.buffOut.writeUInt32LE(data,this.buffOutIndex );
         this.buffOutIndex+=4;
     }
     public writeOutInt32( data:number){
-        this.buff.writeInt32LE(data,this.buffOutIndex );
+        this.buffOut.writeInt32LE(data,this.buffOutIndex );
         this.buffOutIndex+=4;
     }
     public writeOutUint64( data:bigint){
-        this.buff.writeBigUInt64LE(data,this.buffOutIndex );
+        this.buffOut.writeBigUInt64LE(data,this.buffOutIndex );
         this.buffOutIndex+=8;
     }
     public writeOutInt64( data:bigint){
-        this.buff.writeBigInt64LE(data,this.buffOutIndex );
+        this.buffOut.writeBigInt64LE(data,this.buffOutIndex );
         this.buffOutIndex+=8;
     }
     public writeOutBool( data:boolean){
-        this.buff.writeUInt8(data ? 1 : 0,this.buffOutIndex );
+        this.buffOut.writeUInt8(data ? 1 : 0,this.buffOutIndex );
         this.buffOutIndex+=1;
     }
 
@@ -165,6 +165,7 @@ export class McuSerialParser extends SerialParserBase<number[]>{
                     }
                     else {
                         this.resetBuffer();
+                        console.log("STATUS_START error")
                     }
                     break;
                 case OPI_STATUS_E.STATUS_COMMAND:
