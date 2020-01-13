@@ -2,42 +2,13 @@ import { Socket } from 'socket.io';
 
 import configData from './config/config.json'
 import { IConfig } from './config/IConfig';
+import { OpiServerLaunch } from './server/Opi/OpiServerLaunch.js';
 export const configApp = (configData as unknown) as IConfig;
 
 console.log({configApp})
 const Readline = require('@serialport/parser-readline')
-import SerialPort from 'serialport';
-import { OpiServer, OpiUartFunction } from './server/OpiServer.js';
-import os from "os";
-import { OptPlatform } from './OptPlatform';
 
-const optPlatform = new OptPlatform();
-const hostName = os.hostname();
-const platform = os.platform();
-optPlatform.hostname = hostName;
-optPlatform.platform = platform;
-let configHost = configApp.hosts.find(f=> f.platform.toLowerCase()===platform.toLowerCase());
-if(!configHost){
-  configHost = configApp.hosts.find(f=> f.platform==="Linux");
-
-}
-optPlatform.mcuUart = configHost.uarts.find(s=> s.portFunction ===OpiUartFunction.MCU.toString() && s.enabled);
-optPlatform.gpsUart = configHost.uarts.find(s=> s.portFunction ===OpiUartFunction.GPS.toString() && s.enabled) ;
-optPlatform.telsUart = configHost.uarts.find(s=> s.portFunction ===OpiUartFunction.TEL.toString() && s.enabled);
-console.log("it worked");
-console.log({hostName,platform})
- SerialPort.list().then((port) => {
-   console.log({})
-  console.log("Port: ", port);
-   console.log({platform,hostName}) 
-   optPlatform.ports = port;
-   
-   console.log({mcu:optPlatform.hasMcu, gps:optPlatform.hasGps, tel:optPlatform.hasTel })
-   const ts = new OpiServer(optPlatform);
-   
- });
- 
-
+OpiServerLaunch();
 export class SerialServer {
    
     init() {

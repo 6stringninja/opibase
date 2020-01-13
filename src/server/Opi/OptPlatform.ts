@@ -1,4 +1,4 @@
-import { IConfigUart } from './config/IConfig';
+import { IConfigUart } from '../../config/IConfig';
 import SerialPort from 'serialport';
 export class OptPlatform {
   ports: SerialPort.PortInfo[] = [];

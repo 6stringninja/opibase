@@ -1,4 +1,4 @@
-import { OpiUartFunction } from "../server/OpiServer";
+import { OpiUartFunction } from "../server/Opi/OpiUartFunction";
 
 export interface IConfigWebSockets{
     enabled:boolean
