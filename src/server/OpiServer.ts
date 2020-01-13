@@ -5,6 +5,8 @@ import SerialPort = require("serialport");
 import { IConfigUart } from "../config/IConfig";
 import Readline = require('@serialport/parser-readline');
 import ByteLength from '@serialport/parser-byte-length';
+import { ConcealedBehaviorSubject } from "../rx/ConcealedBehaviorSubject";
+import { ConcealedSubject } from "../rx/ConcealedSubject";
 export enum OpiUartFunction {
     MCU = "MCU",
     GPS = "GPS",
@@ -29,6 +31,19 @@ export class OpiSerial {
 export class OpiServer extends ServerBase<OpiClientState, OpiServerState> {
     errors$ = new DebugDataObservable();
     ports: OpiSerial[] = [];
+    mcuRawDataCs = new ConcealedSubject<number[]>();
+    public get mcuRawData$() {
+        return this.mcuRawDataCs.observable;;
+    }
+    gpsRawDataCs = new ConcealedSubject<string>();
+    public get gpsRawData$() {
+       
+        return this.gpsRawDataCs.observable;;
+    }
+    telRawDataCs = new ConcealedSubject<string>();
+    public get telRawData$() {
+        return this.telRawDataCs.observable;;
+    }
     constructor(public optPlatform: OptPlatform) {
         super((socket: SocketIO.Socket) => {
             return this.getServerState(socket);
@@ -55,12 +70,30 @@ export class OpiServer extends ServerBase<OpiClientState, OpiServerState> {
                         }
                         var arz: any
                         switch (p.uartType) {
-                            case OpiUartFunction.GPS:
-                                p.parser = p.port.pipe(new Readline({ delimiter: '\r\n' }))
+                            case OpiUartFunction.MCU:
+                                p.parser = p.port.pipe(new ByteLength());
+                                p.parser.on('data',  (data)=> {
+                                    this.mcuRawDataCs.next(data);
+                                    
+                                });
+                                this.mcuRawData$.subscribe(s=>console.log({obg:s}));
                                 break;
 
                             default:
-                                p.parser = p.port.pipe(new ByteLength({ length: 8 }))
+                                p.parser = p.port.pipe(new Readline({ delimiter: '\r\n' }));
+                                if (p.uartType===OpiUartFunction.GPS){
+                                   
+                                    p.parser.on('data',  (data) =>{
+                                        p.parser.mcuGpsCs.next(data);
+                                        
+                                    });
+                                }
+                                else if (p.uartType===OpiUartFunction.TEL) {
+                                    p.parser.on('data',  (data) => {
+                                        p.parser.mcuTelCs.next(data);
+                                        
+                                    });
+                                }
                                 break;
                         }
  
