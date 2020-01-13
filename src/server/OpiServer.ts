@@ -47,33 +47,49 @@ export class OpiServer extends ServerBase<OpiClientState, OpiServerState> {
     private initSerial() {
         this.ports.forEach(p => {
             if (p.enabled) {
-               
-                    p.port = new SerialPort(p.config.portName, { baudRate:p.config.portBaud, autoOpen: true },
-                        function (err) {
-                            if (err) {
-                              return console.log('Error: ', err.message)
+
+                p.port = new SerialPort(p.config.portName, { baudRate: p.config.portBaud, autoOpen: true },
+                    function (err) {
+                        if (err) {
+                            return console.log('Error: ', err.message)
+                        }
+                        var arz: any
+                        switch (p.uartType) {
+                            case OpiUartFunction.GPS:
+                                p.parser = p.port.pipe(new Readline({ delimiter: '\r\n' }))
+                                break;
+
+                            default:
+                                p.parser = p.port.pipe(new ByteLength({ length: 8 }))
+                                break;
+                        }
+
+                        // p.parser = p.port.pipe(new Readline({ delimiter: '\r\n' })) 
+                        p.parser = p.port.pipe(new ByteLength({ length: 8 }))
+
+                        p.parser.on('data', function (data) {
+
+                            if (p.uartType === OpiUartFunction.GPS) {
+                                arz = [];
+                                for (var x = 0; x < 8; x++) {
+                                    arz.push(data.readUInt8(x));
+                                }
+                            } else {
+                                arz = data;
                             }
-                           // p.parser = p.port.pipe(new Readline({ delimiter: '\r\n' })) 
-                            p.parser =  p.port.pipe(new ByteLength({length: 8}))
 
-                            p.parser.on('data', function (data) {
-                                var arz = [];
-for(var x =0;x<8;x++){
-arz.push(data.readUInt8(x));
-}
+                            console.log({ portname: p.config.portName, baud: p.config.portBaud, data: arz })
+                        })
+                        console.log("connected connected")
+                        //   p.parser = p.port.pipe(new Readline({ delimiter: '\r\n' })) ;
+                    });
 
-                                console.log({portname:p.config.portName,baud:p.config.portBaud,data:arz})
-                              })
-                            console.log("connected connected")
-                           //   p.parser = p.port.pipe(new Readline({ delimiter: '\r\n' })) ;
-                          });
-                   
-              
-            
+
+
 
             }
         });
-       
+
     }
     private getServerState(socket) {
         const prm = new Promise<OpiServerState>((r) => {
