@@ -56,7 +56,7 @@ export class McuSerialParser extends SerialParserBase<number[]>{
     static OPI_START_B = 0x44;
     constructor(protected opiSerialPorts: OpiSerialPorts) {
         super(opiSerialPorts.ports.find(f => f.uartType === OpiUartFunction.MCU))
-        
+        this.opiSerial.data.subscribe(s=> this.parseData);
     }
     private rawCommandsCs = new ConcealedSubject<McuCommandResult>();
 
