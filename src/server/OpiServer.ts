@@ -63,9 +63,7 @@ export class OpiServer extends ServerBase<OpiClientState, OpiServerState> {
                                 p.parser = p.port.pipe(new ByteLength({ length: 8 }))
                                 break;
                         }
-
-                        // p.parser = p.port.pipe(new Readline({ delimiter: '\r\n' })) 
-                        p.parser = p.port.pipe(new ByteLength({ length: 8 }))
+ 
 
                         p.parser.on('data', function (data) {
 
