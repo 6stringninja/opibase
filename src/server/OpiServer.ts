@@ -32,7 +32,7 @@ export class OpiSerial {
 export class OpiServer extends ServerBase<OpiClientState, OpiServerState> {
     errors$ = new DebugDataObservable();
     ports: OpiSerial[] = [];
-    mcuRawDataCs = new ConcealedSubject<number[]>();
+    mcuRawDataCs: ConcealedSubject<number[]>;
     public get mcuRawData$(): Observable<number[]> {
         return this.mcuRawDataCs.observable;;
     }
@@ -72,6 +72,7 @@ export class OpiServer extends ServerBase<OpiClientState, OpiServerState> {
                         var arz: any
                         switch (p.uartType) {
                             case OpiUartFunction.MCU:
+                                this.mcuRawDataCs =  new ConcealedSubject<number[]>();
                                 p.parser = p.port.pipe(new ByteLength());
                                 p.parser.on('data',  (data)=> {
                                     var res :number[] = [];
@@ -88,13 +89,13 @@ export class OpiServer extends ServerBase<OpiClientState, OpiServerState> {
                                 if (p.uartType===OpiUartFunction.GPS){
                                    
                                     p.parser.on('data',  (data) =>{
-                                        p.parser.mcuGpsCs.next(data);
+                                   //     p.parser.mcuGpsCs.next(data);
                                         
                                     });
                                 }
                                 else if (p.uartType===OpiUartFunction.TEL) {
                                     p.parser.on('data',  (data) => {
-                                        p.parser.mcuTelCs.next(data);
+                                    //    p.parser.mcuTelCs.next(data);
                                         
                                     });
                                 }
