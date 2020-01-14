@@ -4,7 +4,8 @@ import { DebugDataObservable, DebugMsg, DebugSeverityType } from "../DebugSocket
 import { ConcealedBehaviorSubject } from "../../rx/ConcealedBehaviorSubject";
 import { OptPlatform } from "./OptPlatform";
 import { OpiSerialPorts } from "./OpiSerialPorts";
-import { McuCommandProcessor } from "../../mcu/McuSerialParser";
+import { McuSerialParser } from "../../mcu/McuSerialParser";
+import { McuSerialRequestProcessor } from "../../mcu/McuSerialRequestProcessor";
 export class OpiClientState {
     msgs: DebugMsg[] = [];
 }
@@ -17,14 +18,15 @@ export class OpiServerState extends ServerClientState<OpiClientState>{
 export class OpiServer extends ServerBase<OpiClientState, OpiServerState> {
     errors$ = new DebugDataObservable();
     opiSerialPorts: OpiSerialPorts;
-    mcuCommandProcessor: McuCommandProcessor;
+    McuSerialRequestProcessor: McuSerialRequestProcessor;
   
     constructor(public optPlatform: OptPlatform) {
         super((socket: SocketIO.Socket) => {
             return this.getServerState(socket);
         }, 42220);
        this.opiSerialPorts = new OpiSerialPorts(optPlatform);
-      this.mcuCommandProcessor = new McuCommandProcessor(this.opiSerialPorts);
+      // const mcup = new McuSerialParser()
+     // this.McuSerialRequestProcessor = new McuSerialRequestProcessor(this.opiSerialPorts);
     }
   
    

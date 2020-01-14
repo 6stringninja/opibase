@@ -54,6 +54,30 @@
     "enabled" :false
 }
             ]
+        },
+        {
+            "platform":"test",
+            "hostName":"DOUGR2-PC",
+            "uarts":[
+{
+    "portFunction": "MCU",
+    "portName":"COM7",
+    "portBaud":115200,
+    "enabled" :true
+},
+{
+    "portFunction": "GPS",
+    "portName":"COM47",
+    "portBaud":9600,
+    "enabled" :false
+},
+{
+    "portFunction": "TEL",
+    "portName":"COM48",
+    "portBaud":57600,
+    "enabled" :false
+}
+            ]
         }
 
     ]

@@ -8,7 +8,7 @@ export const configApp = (configData as unknown) as IConfig;
 console.log({configApp})
 const Readline = require('@serialport/parser-readline')
 
-OpiServerLaunch();
+//OpiServerLaunch();
 export class SerialServer {
    
     init() {

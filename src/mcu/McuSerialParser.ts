@@ -1,9 +1,10 @@
 import { OpiSerial } from "../server/Opi/OpiSerial";
 import { OpiUartFunction } from "../server/Opi/OpiUartFunction";
-import { HistoricalScheduler } from "rx";
+
 import { ConcealedSubject } from "../rx/ConcealedSubject";
 import { OpiSerialPorts } from "../server/Opi/OpiSerialPorts";
-import { ConcealedBehaviorSubject } from "../rx/ConcealedBehaviorSubject";
+import { Observable ,Subscription} from "rxjs";
+import SerialPort = require("serialport");
 
 
 export abstract class SerialParserBase<T>{
@@ -43,6 +44,8 @@ export enum OPI_RPC_E {
 };
 export enum OPI_COMMAND_E {
     OPI_COMMAND_DEVICE_ID,
+    OPI_COMMAND_DEVICE_BNO_EULER,
+    OPI_COMMAND_DEVICE_BNO_EULER_ENABLE_STREAM,
     OPI_COMMAND_MAX_SIZE
 };
 export class McuCommandResult {
@@ -50,13 +53,32 @@ export class McuCommandResult {
 
     }
 }
+export class McuBnoEulerAxis{
+    constructor(public data:number[]=[0,0,0],public timeStamp=0){
 
-export class McuSerialParser extends SerialParserBase<number[]>{
+    }
+
+    get X(){
+        return this.data[0];
+    }
+    get Y(){
+        return this.data[1];
+    }
+    get Z(){
+        return this.data[2];
+    }
+}
+export class McuSerialSendCommand{
+
+}
+export class McuSerialParser {
     static BUFFER_SIZE = 256;
     static OPI_START_B = 0x44;
-    constructor(protected opiSerialPorts: OpiSerialPorts) {
-        super(opiSerialPorts.ports.find(f => f.uartType === OpiUartFunction.MCU))
-        this.opiSerial.data.subscribe(s=> this.parseData);
+    sub: Subscription;
+    
+    constructor(protected data: Observable<number[]>,private port?:SerialPort) {
+    
+       this.sub = data.subscribe(s=> this.parseData(s));
     }
     private rawCommandsCs = new ConcealedSubject<McuCommandResult>();
 
@@ -66,71 +88,15 @@ export class McuSerialParser extends SerialParserBase<number[]>{
 
     uartFunction = OpiUartFunction.MCU;
     private buff = Buffer.alloc(McuSerialParser.BUFFER_SIZE);
-    private buffOut = Buffer.alloc(McuSerialParser.BUFFER_SIZE);
+  
     private buffIndex = 0;
-    private status: OPI_STATUS_E;
+    private status = OPI_STATUS_E.STATUS_START;
     private opiCommand: number;
     private len: number;
     private errorResult: number;
-    private buffOutIndex = 3;
-    public resetOutBuffer(){
-        this.buffOut.writeUInt32BE(McuSerialParser.OPI_START_B,0);
-        this.buffOut.writeUInt8(McuSerialParser.OPI_START_B,0);
-        this.buffIndex = 3;
-        
-    }
-    public sendCommand(command:OPI_COMMAND_E){
-        this.buffOut.writeUInt8( command,1);
-        this.buffOut.writeUInt8( this.buffOutIndex-3,2);
-        if(    this.opiSerial.port &&     this.opiSerial.port.isOpen){
-            this.opiSerial.port.write(this.buffOut.slice(0,this.buffOutIndex),(e,bw)=>{
-                if(!e){
-                    console.log({McuBytesWritten:bw})
-                }
-                else{
-                    console.log({McuSendCommandError:e})
-                }
-            });
-        }
-        
-    }
- 
-    public writeOutUint8( data:number){
-        this.buffOut.writeUInt8(data,this.buffOutIndex );
-        this.buffOutIndex+=1;
-    }
-    public writeOutInt8( data:number){
-        this.buffOut.writeInt8(data,this.buffOutIndex );
-        this.buffOutIndex+=1;
-    }
-    public writeOutUint16( data:number){
-        this.buffOut.writeUInt16LE(data,this.buffOutIndex );
-        this.buffOutIndex+=2;
-    }
-    public writeOutInt16( data:number){
-        this.buffOut.writeInt16LE(data,this.buffOutIndex );
-        this.buffOutIndex+=2;
-    }
-    public writeOutUint32( data:number){
-        this.buffOut.writeUInt32LE(data,this.buffOutIndex );
-        this.buffOutIndex+=4;
-    }
-    public writeOutInt32( data:number){
-        this.buffOut.writeInt32LE(data,this.buffOutIndex );
-        this.buffOutIndex+=4;
-    }
-    public writeOutUint64( data:bigint){
-        this.buffOut.writeBigUInt64LE(data,this.buffOutIndex );
-        this.buffOutIndex+=8;
-    }
-    public writeOutInt64( data:bigint){
-        this.buffOut.writeBigInt64LE(data,this.buffOutIndex );
-        this.buffOutIndex+=8;
-    }
-    public writeOutBool( data:boolean){
-        this.buffOut.writeUInt8(data ? 1 : 0,this.buffOutIndex );
-        this.buffOutIndex+=1;
-    }
+  
+   
+    
 
     private resetBuffer() {
         this.buffIndex = 0;
@@ -155,6 +121,7 @@ export class McuSerialParser extends SerialParserBase<number[]>{
     protected parseData(data: number[]) {
 
         data.forEach(c => {
+            // console.log({c,s:this.status})
             if (this.buffIndex >= McuSerialParser.BUFFER_SIZE) {
                 this.resetBuffer();
             }
@@ -165,7 +132,7 @@ export class McuSerialParser extends SerialParserBase<number[]>{
                     }
                     else {
                         this.resetBuffer();
-                        console.log("STATUS_START error")
+                        // console.log("STATUS_START error")
                     }
                     break;
                 case OPI_STATUS_E.STATUS_COMMAND:
@@ -214,43 +181,4 @@ export class McuSerialParser extends SerialParserBase<number[]>{
 
 
 }
-export class McuCommandProcessor {
-    private mcuSerialParser: McuSerialParser;
 
-    private DeviceIdCs = new ConcealedBehaviorSubject<number>(0);
-    get DeviceId$() {
-        return this.DeviceIdCs.observable;
-    }
-    private CommandErrorCs = new ConcealedSubject<McuCommandResult>();
-    get CommandError$() {
-        return this.CommandErrorCs.observable;
-    }
-    private proccessCommandError(c: McuCommandResult) {
-        console.log({ commandErr: c });
-    }
-    private proccessCommand(c: McuCommandResult) {
-        if (c.errorResult !== OPI_RPC_E.OPI_PRC_COMMAND_SUCCESS) {
-            this.proccessCommandError(c);
-        }
-        switch (c.command) {
-            case OPI_COMMAND_E.OPI_COMMAND_DEVICE_ID:
-                this.DeviceIdCs.next(c.buff.readUInt8(0));
-
-                break;
-
-            default:
-                break;
-        }
-    }
-    requestDeviceId():void{
-        this.mcuSerialParser.resetOutBuffer();
-        this.mcuSerialParser.sendCommand(OPI_COMMAND_E.OPI_COMMAND_DEVICE_ID);
-    }
-    constructor(private opiSerialPorts: OpiSerialPorts) {
-        if (this.opiSerialPorts.optPlatform.hasMcu) {
-            this.mcuSerialParser = new McuSerialParser(opiSerialPorts)
-            this.mcuSerialParser.rawCommands$.subscribe(this.proccessCommand);
-            
-        }
-    }
-}
