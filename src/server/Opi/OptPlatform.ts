@@ -17,7 +17,7 @@ export class OptPlatform {
     return !!this.telsUart && this.ports.some(s => s.comName  === this.telsUart.portName);
   }
   public get hasDbg() {
-    return !!this.telsUart && this.ports.some(s => s.comName  === this.dbgUart.portName);
+    return !!this.dbgUart && this.ports.some(s => s.comName  === this.dbgUart.portName);
   }
   platform = "";
   hostname = "";

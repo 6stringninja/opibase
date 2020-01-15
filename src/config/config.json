@@ -55,7 +55,7 @@
 },
 {
     "portFunction": "TEL",
-    "portName":"/dev/ttyUSB0",
+    "portName":"/dev/ttyS0",
     "portBaud":57800,
     "enabled" :false
 },
