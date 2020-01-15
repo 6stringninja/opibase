@@ -6,6 +6,7 @@ export class OptPlatform {
   mcuUart?: IConfigUart;
   gpsUart?: IConfigUart;
   telsUart?: IConfigUart;
+  dbgUart?: IConfigUart;
   public get hasMcu() {
     return !!this.mcuUart && this.ports.some(s => s.comName  === this.mcuUart.portName);
   }
@@ -14,6 +15,9 @@ export class OptPlatform {
   }
   public get hasTel() {
     return !!this.telsUart && this.ports.some(s => s.comName  === this.telsUart.portName);
+  }
+  public get hasDbg() {
+    return !!this.telsUart && this.ports.some(s => s.comName  === this.dbgUart.portName);
   }
   platform = "";
   hostname = "";
@@ -27,11 +31,13 @@ export class OpPlatform {
     this.mcuUart = this.hostConfig.uarts.find(s=> s.portFunction === OpiUartFunction.MCU);
     this.gpsUart = this.hostConfig.uarts.find(s=> s.portFunction === OpiUartFunction.GPS);
     this.telsUart = this.hostConfig.uarts.find(s=> s.portFunction === OpiUartFunction.TEL);
+    this.dbgUart = this.hostConfig.uarts.find(s=> s.portFunction === OpiUartFunction.DBG);
    }
   }
   mcuUart?: IConfigUart;
   gpsUart?: IConfigUart;
   telsUart?: IConfigUart;
+  dbgUart?: IConfigUart;
   public get hasMcu() {
     return !!this.mcuUart && this.ports.some(s => s.comName  === this.mcuUart.portName);
   }
@@ -41,6 +47,8 @@ export class OpPlatform {
   public get hasTel() {
     return !!this.telsUart && this.ports.some(s => s.comName  === this.telsUart.portName);
   }
- 
+  public get hasDbg() {
+    return !!this.dbgUart && this.ports.some(s => s.comName  === this.telsUart.portName);
+  }
   hostname = "";
 }

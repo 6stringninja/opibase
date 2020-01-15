@@ -64,7 +64,7 @@ export class McuSerialParser {
                 this.parseBuffer(data)
                 console.log(data);
             });
-            this.testPort();
+           
         }
      }
      testPort(){

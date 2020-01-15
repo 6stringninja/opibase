@@ -15,7 +15,7 @@
     "portFunction": "MCU",
     "portName":"COM7",
     "portBaud":57600,
-    "enabled" :true
+    "enabled" :false
 },
 {
     "portFunction": "GPS",
@@ -26,6 +26,12 @@
 {
     "portFunction": "TEL",
     "portName":"COM7",
+    "portBaud":57600,
+    "enabled" :false
+},
+{
+    "portFunction": "DBG",
+    "portName":"COM48",
     "portBaud":57600,
     "enabled" :false
 }
@@ -52,6 +58,12 @@
     "portName":"/dev/ttyUSB0",
     "portBaud":57800,
     "enabled" :false
+},
+{
+    "portFunction": "DBG",
+    "portName":"/dev/ttyUSB0",
+    "portBaud":57800,
+    "enabled" :true
 }
             ]
         },
@@ -73,6 +85,12 @@
 },
 {
     "portFunction": "TEL",
+    "portName":"COM48",
+    "portBaud":57600,
+    "enabled" :false
+},
+{
+    "portFunction": "DBG",
     "portName":"COM48",
     "portBaud":57600,
     "enabled" :false

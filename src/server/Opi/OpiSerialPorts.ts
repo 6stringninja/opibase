@@ -11,7 +11,8 @@ export class OpiSerialPorts {
         this.ports = [
             new OpiSerial<number[]>(OpiUartFunction.MCU, this.optPlatform.hasMcu, this.optPlatform.mcuUart),
             new OpiSerial<string>(OpiUartFunction.GPS, this.optPlatform.hasGps, this.optPlatform.gpsUart),
-            new OpiSerial<string>(OpiUartFunction.TEL, this.optPlatform.hasTel, this.optPlatform.telsUart)
+            new OpiSerial<string>(OpiUartFunction.TEL, this.optPlatform.hasTel, this.optPlatform.telsUart),
+            new OpiSerial<string>(OpiUartFunction.DBG, this.optPlatform.hasDbg, this.optPlatform.dbgUart)
         ];
         this.initSerial();
     }

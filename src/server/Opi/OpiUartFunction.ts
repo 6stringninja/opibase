@@ -1,5 +1,6 @@
 export enum OpiUartFunction {
     MCU = "MCU",
     GPS = "GPS",
-    TEL = "TEL"
+    TEL = "TEL",
+    DBG="DBG"
 }
