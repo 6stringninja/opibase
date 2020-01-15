@@ -9,6 +9,7 @@ import { McuSerialParser } from '../../mcu/McuSerialParser.js';
 import { DebugSerialParser } from '../../debug/DebugSerialParser.js';
 import { interval } from 'rxjs';
 import { McuSerialRequestProcessor } from '../../mcu/McuSerialRequestProcessor.js';
+import { McuSerialResponseProcessor } from '../../mcu/McuSerialResponseProcessor.js';
 export function OpiServerLaunch() {
   const optPlatform = new OptPlatform();
   const hostName = os.hostname();
@@ -44,6 +45,8 @@ const subscribe = source.subscribe(val => {
 
     const mcuSerialParser = new McuSerialParser(mcuPort? mcuPort.port : null);
     const debugSerialParser  = new DebugSerialParser(debugPort? debugPort.port : null);
+    const mcuResp = new McuSerialResponseProcessor(mcuSerialParser.rawCommands$);
+    mcuResp.BnoEulerAxis$.subscribe((s)=>console.log(s));
     mcuSerialParser.rawCommands$.subscribe(s=> console.log(s));
     const mcuReq = new McuSerialRequestProcessor();
     mcuReq.sendCommand$.subscribe(s=>{
