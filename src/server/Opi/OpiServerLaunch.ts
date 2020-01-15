@@ -31,8 +31,10 @@ export function OpiServerLaunch() {
     const opiSerialPorts = new OpiSerialPorts(optPlatform);
     const mcuPort = opiSerialPorts.ports.find(f=> f.uartType===OpiUartFunction.MCU && f.enabled);
     const debugPort = opiSerialPorts.ports.find(f=> f.uartType===OpiUartFunction.DBG && f.enabled);
+
     const mcuSerialParser = new McuSerialParser(mcuPort? mcuPort.port : null);
     const debugSerialParser  = new DebugSerialParser(debugPort? debugPort.port : null);
+    console.log({debugPort,debugSerialParser,opiSerialPorts,optPlatform})
    // const ts = new OpiServer(optPlatform);
   });
 }
