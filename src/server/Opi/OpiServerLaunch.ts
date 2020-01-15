@@ -44,10 +44,11 @@ const subscribe = source.subscribe(val => {
 
     const mcuSerialParser = new McuSerialParser(mcuPort? mcuPort.port : null);
     const debugSerialParser  = new DebugSerialParser(debugPort? debugPort.port : null);
+    mcuSerialParser.rawCommands$.subscribe(s=> console.log(s));
     const mcuReq = new McuSerialRequestProcessor();
     mcuReq.sendCommand$.subscribe(s=>{
       if(mcuPort && mcuPort.port && mcuPort.port.isOpen){
-        mcuPort.port.write(s);
+        const bw =  mcuPort.port.write(s,(bw)=>console.log({bw}));
       }
       else{
         console.log(s);
