@@ -28,7 +28,7 @@ export class OpiSerialPorts {
                     var arz: any;
                     switch (p.uartType) {
                         case OpiUartFunction.MCU:
-                            p.rawDataCs = new ConcealedSubject<number[]>();
+                           /* p.rawDataCs = new ConcealedSubject<number[]>();
                             p.parser = p.port.pipe(new ByteLength({ length: 8 }));
                             p.parser.on('data', (data) => {
                                 var res: number[] = [];
@@ -38,6 +38,7 @@ export class OpiSerialPorts {
                                 p.rawDataCs.next(res);
                             });
                             p.data.subscribe(s => console.log({ obg: s }));
+                            */
                             break;
                         default:
                             p.parser = p.port.pipe(new Readline({ delimiter: '\r\n' }));
@@ -57,14 +58,14 @@ export class OpiSerialPorts {
                             break;
                     }
                     // DEBUG
-                    p.parser.on('data', function (data) {
+                   /* p.parser.on('data', function (data) {
                         if (p.uartType !== OpiUartFunction.GPS) {
                         }
                         else {
                             arz = data;
                         }
                         console.log({ portname: p.config.portName, baud: p.config.portBaud, data: arz });
-                    });
+                    });*/
                     console.log("connected connected");
                     //   p.parser = p.port.pipe(new Readline({ delimiter: '\r\n' })) ;
                 });

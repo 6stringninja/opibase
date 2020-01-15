@@ -13,9 +13,9 @@
             "uarts":[
 {
     "portFunction": "MCU",
-    "portName":"COM40",
-    "portBaud":115200,
-    "enabled" :false
+    "portName":"COM7",
+    "portBaud":57600,
+    "enabled" :true
 },
 {
     "portFunction": "GPS",
@@ -27,7 +27,7 @@
     "portFunction": "TEL",
     "portName":"COM7",
     "portBaud":57600,
-    "enabled" :true
+    "enabled" :false
 }
             ]
         },

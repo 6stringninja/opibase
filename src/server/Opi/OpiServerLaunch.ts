@@ -4,6 +4,8 @@ import { OpiUartFunction } from "./OpiUartFunction";
 import os from "os";
 import { OptPlatform } from './OptPlatform';
 import { configApp } from '../../index';
+import { OpiSerialPorts } from './OpiSerialPorts.js';
+import { McuSerialParser } from '../../mcu/McuSerialParser.js';
 export function OpiServerLaunch() {
   const optPlatform = new OptPlatform();
   const hostName = os.hostname();
@@ -25,6 +27,9 @@ export function OpiServerLaunch() {
     console.log({ platform, hostName });
     optPlatform.ports = port;
     console.log({ mcu: optPlatform.hasMcu, gps: optPlatform.hasGps, tel: optPlatform.hasTel });
-    const ts = new OpiServer(optPlatform);
+    const opiSerialPorts = new OpiSerialPorts(optPlatform);
+    const mcuPort = opiSerialPorts.ports.find(f=> f.uartType===OpiUartFunction.MCU);
+    const mcuSerialParser = new McuSerialParser(mcuPort.port);
+   // const ts = new OpiServer(optPlatform);
   });
 }

@@ -2,6 +2,7 @@ import { OpiUartFunction } from "../server/Opi/OpiUartFunction";
 import { ConcealedSubject } from "../rx/ConcealedSubject";
 import { Observable ,Subscription} from "rxjs";
 import SerialPort = require("serialport");
+import ByteLength from '@serialport/parser-byte-length';
 import { McuCommandResult } from "./McuCommandResult";
 
 export enum OPI_STATUS_E {
@@ -48,6 +49,7 @@ export class McuSerialParser {
     sub: Subscription;
     data: Observable<number[]>;
     private errorCs = new ConcealedSubject<McuSerialParserError>();
+    private parser: any;
     get error$(){
         return this.errorCs.observable;
     }
@@ -55,6 +57,19 @@ export class McuSerialParser {
 
     constructor (private port?:SerialPort) {
         this.parseBufferCs.observable.subscribe(s=> this.parseData(s));
+        if(port){
+            this.parser = port.pipe(new ByteLength({ length: 8 }));
+            console.log("port connected");
+            this.parser.on('data', (data) => {
+                this.parseBuffer(data)
+             
+            });
+            this.testPort();
+        }
+     }
+     testPort(){
+         this.port.write("testing");
+         setTimeout(()=>this.testPort(),2000);
      }
      private parseError(e:OPI_RPC_E){
          const r:number[]=[];
