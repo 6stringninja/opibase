@@ -93,7 +93,7 @@
     "portFunction": "DBG",
     "portName":"COM48",
     "portBaud":57600,
-    "enabled" :false
+    "enabled" :true
 }
             ]
         }
