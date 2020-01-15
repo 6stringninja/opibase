@@ -20,6 +20,7 @@ export function OpiServerLaunch() {
   optPlatform.mcuUart = configHost.uarts.find(s => s.portFunction === OpiUartFunction.MCU.toString() && s.enabled);
   optPlatform.gpsUart = configHost.uarts.find(s => s.portFunction === OpiUartFunction.GPS.toString() && s.enabled);
   optPlatform.telsUart = configHost.uarts.find(s => s.portFunction === OpiUartFunction.TEL.toString() && s.enabled);
+  optPlatform.dbgUart = configHost.uarts.find(s => s.portFunction === OpiUartFunction.DBG.toString() && s.enabled);
   console.log("it worked");
   console.log({ hostName, platform });
   SerialPort.list().then((port) => {
