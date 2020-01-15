@@ -15,6 +15,7 @@ export class DebugSerialParser {
             this.parser.on('data', (data) => {
                 this.parseData(data)
               this.sendData(data);
+             
             });
            
         }

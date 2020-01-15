@@ -7,6 +7,7 @@ import { configApp } from '../../index';
 import { OpiSerialPorts } from './OpiSerialPorts.js';
 import { McuSerialParser } from '../../mcu/McuSerialParser.js';
 import { DebugSerialParser } from '../../debug/DebugSerialParser.js';
+import { interval } from 'rxjs';
 export function OpiServerLaunch() {
   const optPlatform = new OptPlatform();
   const hostName = os.hostname();
@@ -24,7 +25,11 @@ export function OpiServerLaunch() {
   console.log("it worked");
   console.log({ hostName, platform });
   SerialPort.list().then((port) => {
-    console.log({});
+    const source = interval(1000);
+//output: 0,1,2,3,4,5....
+const subscribe = source.subscribe(val => global.gc());
+
+    console.log({}); 
     console.log("Port: ", port);
     console.log({ platform, hostName });
     optPlatform.ports = port;
@@ -35,6 +40,7 @@ export function OpiServerLaunch() {
 
     const mcuSerialParser = new McuSerialParser(mcuPort? mcuPort.port : null);
     const debugSerialParser  = new DebugSerialParser(debugPort? debugPort.port : null);
+    global.gc();
    // console.log({debugPort,debugSerialParser,opiSerialPorts,optPlatform})
    // const ts = new OpiServer(optPlatform);
   });

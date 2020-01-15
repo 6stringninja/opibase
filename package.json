@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc   -w",
-    "start": "nodemon ./build/index.js --ignore *.json",
+    "start": "nodemon --expose-gc ./build/index.js --ignore *.json",
     "test": "jasmine --stop-on-failure=false ",
     "test-build": "tsc -p spec -w",
     "testserver": "nodemon ./build/examples/ServerTest.js --ignore *.json",

@@ -61,7 +61,7 @@ export class McuSerialParser {
             this.parser = port.pipe(new ByteLength({ length: 8 }));
             console.log("port connected");
             this.parser.on('data', (data) => {
-                this.parseBuffer(data)
+                this.parseBuffer(data,true)
                 console.log(data);
             });
            
@@ -79,16 +79,18 @@ export class McuSerialParser {
          }
          this.errorCs.next(new McuSerialParserError(e,r));
      }
-    private bufferToNumberArray(b:Buffer){
+    private bufferToNumberArray(b:Buffer,nullBuff = false){
         const r:number[]=[];
         for (let index = 0; index < b.length; index++) {
             r.push(b.readUInt8(index));     
         }
+        if (b && nullBuff) b = null;
         return r;
     }
 
-    parseBuffer(b:Buffer){
-        this.parseBufferCs.next(this.bufferToNumberArray(b));
+    parseBuffer(b:Buffer,nullBuff=false){
+        this.parseBufferCs.next(this.bufferToNumberArray(b,nullBuff));
+       if (b && nullBuff) b = null;
     }
 
     private rawCommandsCs = new ConcealedSubject<McuCommandResult>();

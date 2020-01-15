@@ -31,7 +31,7 @@ export class McuSerialRequestProcessor {
     }
     public sendCommand(command: OPI_COMMAND_E) {
         //const prom = new Promise<number>((r,e)=>{
-        this.buffOut.writeUInt8(command, 1);
+        this.buffOut.writeUInt8(command, 1); 
         this.buffOut.writeUInt8(this.buffOutIndex, 2);
         /*for (let index = 3; index < this.buffOutIndex; index++) {
          this.buffOut.writeUInt8(data[0],this.buffOutIndex )
@@ -41,26 +41,7 @@ export class McuSerialRequestProcessor {
         this.buffOut.copy(copyBuffer, 0, 0, this.buffOutIndex);
         // // console.log({cpy: copyBuffer})
         this.sendCommandCs.next(copyBuffer);
-        /* if(    this.port &&     this.port.isOpen){
-            
-             this.port.write(tmpBuffer,(er,bw)=>{
-                 if(!e){
-                     // console.log({McuBytesWritten:bw})
-                     r(bw);
-                 }
-                 else{
-                     // console.log({McuSendCommandError:e})
-                     e(er)
-                 }
-             });
-         }else{
-             // console.log("no port passed to McuSerialParser")
-             // console.log({buf:tmpBuffer,bw:this.buffOutIndex});
-             r(this.buffIndex);
-
-         }*/
-        // });
-        // return prom;
+ 
     }
     public writeOutUint8(data: number) {
         this.buffOut.writeUInt8(data, this.buffOutIndex);
