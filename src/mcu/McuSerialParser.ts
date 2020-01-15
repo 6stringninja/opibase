@@ -1,21 +1,9 @@
-import { OpiSerial } from "../server/Opi/OpiSerial";
 import { OpiUartFunction } from "../server/Opi/OpiUartFunction";
-
 import { ConcealedSubject } from "../rx/ConcealedSubject";
-import { OpiSerialPorts } from "../server/Opi/OpiSerialPorts";
 import { Observable ,Subscription} from "rxjs";
 import SerialPort = require("serialport");
+import { McuCommandResult } from "./McuCommandResult";
 
-
-export abstract class SerialParserBase<T>{
-    abstract uartFunction: OpiUartFunction;
-    protected abstract parseData(data: T);
-    constructor(protected opiSerial: OpiSerial<T>) {
-        this.opiSerial.data.subscribe((data) => {
-            this.parseData(data);
-        })
-    }
-}
 export enum OPI_STATUS_E {
 
     STATUS_START = 0,
@@ -48,38 +36,46 @@ export enum OPI_COMMAND_E {
     OPI_COMMAND_DEVICE_BNO_EULER_ENABLE_STREAM,
     OPI_COMMAND_MAX_SIZE
 };
-export class McuCommandResult {
-    constructor(public command: OPI_COMMAND_E, public errorResult: OPI_RPC_E, public length: number, public buff?: Buffer) {
-
-    }
-}
-export class McuBnoEulerAxis{
-    constructor(public data:number[]=[0,0,0],public timeStamp=0){
-
-    }
-
-    get X(){
-        return this.data[0];
-    }
-    get Y(){
-        return this.data[1];
-    }
-    get Z(){
-        return this.data[2];
-    }
-}
-export class McuSerialSendCommand{
-
+export class McuSerialParserError{
+    constructor(
+  public  error: OPI_RPC_E,
+  public  data:number[]
+    ){}
 }
 export class McuSerialParser {
     static BUFFER_SIZE = 256;
     static OPI_START_B = 0x44;
     sub: Subscription;
-    
-    constructor(protected data: Observable<number[]>,private port?:SerialPort) {
-    
-       this.sub = data.subscribe(s=> this.parseData(s));
+    data: Observable<number[]>;
+    private errorCs = new ConcealedSubject<McuSerialParserError>();
+    get error$(){
+        return this.errorCs.observable;
     }
+    private parseBufferCs = new ConcealedSubject<number[]>();
+
+    constructor (private port?:SerialPort) {
+        this.parseBufferCs.observable.subscribe(s=> this.parseData(s));
+     }
+     private parseError(e:OPI_RPC_E){
+         const r:number[]=[];
+         for (let index = 0; index < this.buffIndex; index++) {
+             r.push(this.buff.readUInt8(index));
+             
+         }
+         this.errorCs.next(new McuSerialParserError(e,r));
+     }
+    private bufferToNumberArray(b:Buffer){
+        const r:number[]=[];
+        for (let index = 0; index < b.length; index++) {
+            r.push(b.readUInt8(index));     
+        }
+        return r;
+    }
+
+    parseBuffer(b:Buffer){
+        this.parseBufferCs.next(this.bufferToNumberArray(b));
+    }
+
     private rawCommandsCs = new ConcealedSubject<McuCommandResult>();
 
     public get rawCommands$() {
@@ -94,9 +90,6 @@ export class McuSerialParser {
     private opiCommand: number;
     private len: number;
     private errorResult: number;
-  
-   
-    
 
     private resetBuffer() {
         this.buffIndex = 0;
@@ -110,12 +103,11 @@ export class McuSerialParser {
         let b: undefined | Buffer = undefined;
         if ([OPI_RPC_E.OPI_PRC_COMMAND_SUCCESS as number, OPI_RPC_E.OPI_RPC_COMMAND_FAIL as number].some(s => s === this.errorResult)) {
             if (this.len > 0) {
-                b = new Buffer(this.buff.buffer.slice(0, this.len));
+                b = Buffer.alloc(this.len);
+                this.buff.copy(b,0,0,this.len);             
             }
-
             this.rawCommandsCs.next(new McuCommandResult(this.opiCommand, this.errorResult, this.len, b))
         }
-
         this.resetBuffer();
     }
     protected parseData(data: number[]) {
@@ -132,15 +124,18 @@ export class McuSerialParser {
                     }
                     else {
                         this.resetBuffer();
+                        this.parseError(OPI_RPC_E.OPI_RPC_INTERNAL_ERROR_EXPECTING_START_BYTE);
                         // console.log("STATUS_START error")
                     }
                     break;
                 case OPI_STATUS_E.STATUS_COMMAND:
                     this.opiCommand = c;
                     if (this.opiCommand >= OPI_COMMAND_E.OPI_COMMAND_MAX_SIZE) {
+                        this.parseError(OPI_RPC_E.OPI_RPC_INTERNAL_ERROR_INVALID_COMMAND);
                         this.resetBuffer();
                     } else {
                         this.status = OPI_STATUS_E.STATUS_ERROR;
+                      
                     }
                     break;
                 case OPI_STATUS_E.STATUS_ERROR:
@@ -150,11 +145,9 @@ export class McuSerialParser {
                 case OPI_STATUS_E.STATUS_LEN:
                     this.len = c;
                     if (this.len === 0) {
-
                         this.processCommand();
-
-                        //   return opi_run_command() ? OPI_PRC_COMMAND_SUCCESS : OPI_RPC_COMMAND_FAIL;
                     } else if (this.len > McuSerialParser.BUFFER_SIZE) {
+                        this.parseError(OPI_RPC_E.OPI_RPC_INTERNAL_ERROR_INVALID_LENGTH);
                         this.resetBuffer();
                     }
                     this.status = OPI_STATUS_E.STATUS_DATA;
@@ -162,13 +155,13 @@ export class McuSerialParser {
                 case OPI_STATUS_E.STATUS_DATA:
 
                     if (this.buffIndex >= McuSerialParser.BUFFER_SIZE) {
+                        this.parseError(OPI_RPC_E.OPI_RPC_INTERNAL_ERROR_BUFFER_OVERRUN);
                         this.resetBuffer();
                     }
                     this.buff.writeUInt8(c, this.buffIndex++);
 
                     if (this.buffIndex == this.len) {
                         this.processCommand();
-
                     }
                     break;
                 default:
@@ -177,8 +170,5 @@ export class McuSerialParser {
             }
         });
     };
-
-
-
 }
 

@@ -1,7 +1,9 @@
 import { ConcealedSubject } from "../rx/ConcealedSubject";
 import { ConcealedBehaviorSubject } from "../rx/ConcealedBehaviorSubject";
 import { Observable, Subscription } from "rxjs";
-import { McuBnoEulerAxis, McuCommandResult, OPI_RPC_E, OPI_COMMAND_E } from "./McuSerialParser";
+import { OPI_RPC_E, OPI_COMMAND_E } from "./McuSerialParser";
+import { McuBnoEulerAxis } from "./McuBnoEulerAxis";
+import { McuCommandResult } from "./McuCommandResult";
 export class McuSerialResponseProcessor {
     private DeviceIdCs = new ConcealedBehaviorSubject<number>(0);
     sub: Subscription;

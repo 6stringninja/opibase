@@ -1,6 +1,7 @@
 import SerialPort = require("serialport");
 import { ConcealedSubject } from "../rx/ConcealedSubject";
-import { McuSerialParser, OPI_COMMAND_E, OPI_RPC_E, McuBnoEulerAxis } from "../mcu/McuSerialParser";
+import { McuSerialParser, OPI_COMMAND_E, OPI_RPC_E } from "../mcu/McuSerialParser";
+import { McuBnoEulerAxis } from "../mcu/McuBnoEulerAxis";
 import { McuSerialResponseProcessor } from "../mcu/McuSerialResponseProcessor";
 import { McuSerialRequestProcessor } from "../mcu/McuSerialRequestProcessor";
 import { doesNotReject } from "assert";
@@ -49,8 +50,8 @@ const fakePorts: SerialPort.PortInfo[] = [
 
   }
   describe(' McuSerialResponseProcessor ', () =>{
-    let cs = new ConcealedSubject<number[]>();
-let mcus = new McuSerialParser(cs.observable);
+  //  let cs = new ConcealedSubject<number[]>();
+let mcus = new McuSerialParser();
 let rspProc = new McuSerialResponseProcessor(mcus.rawCommands$);
     it('DeviceId should be 99', (done) => {
       let testId = 0;
@@ -62,7 +63,8 @@ let rspProc = new McuSerialResponseProcessor(mcus.rawCommands$);
         //     console.log({id})
 
       });
-      cs.next([McuSerialParser.OPI_START_B, OPI_COMMAND_E.OPI_COMMAND_DEVICE_ID, OPI_RPC_E.OPI_PRC_COMMAND_SUCCESS, 1, 99]);
+      mcus.parseBuffer( Buffer.from([McuSerialParser.OPI_START_B, OPI_COMMAND_E.OPI_COMMAND_DEVICE_ID, OPI_RPC_E.OPI_PRC_COMMAND_SUCCESS, 1, 99]));
+     
       setTimeout(() => {
         expect(testId).toEqual(99);
         done();
@@ -80,7 +82,7 @@ let rspProc = new McuSerialResponseProcessor(mcus.rawCommands$);
         //     console.log({id})
 
       });
-      cs.next([McuSerialParser.OPI_START_B, OPI_COMMAND_E.OPI_COMMAND_DEVICE_BNO_EULER_ENABLE_STREAM, OPI_RPC_E.OPI_PRC_COMMAND_SUCCESS, 1, 1]);
+      mcus.parseBuffer( Buffer.from([McuSerialParser.OPI_START_B, OPI_COMMAND_E.OPI_COMMAND_DEVICE_BNO_EULER_ENABLE_STREAM, OPI_RPC_E.OPI_PRC_COMMAND_SUCCESS, 1, 1]));
       setTimeout(() => {
         expect(testResult).toBeTruthy();
         done();
@@ -97,7 +99,7 @@ let rspProc = new McuSerialResponseProcessor(mcus.rawCommands$);
         //     console.log({id})
 
       });
-      cs.next([McuSerialParser.OPI_START_B, OPI_COMMAND_E.OPI_COMMAND_DEVICE_BNO_EULER_ENABLE_STREAM, OPI_RPC_E.OPI_PRC_COMMAND_SUCCESS, 1, 0]);
+      mcus.parseBuffer( Buffer.from([McuSerialParser.OPI_START_B, OPI_COMMAND_E.OPI_COMMAND_DEVICE_BNO_EULER_ENABLE_STREAM, OPI_RPC_E.OPI_PRC_COMMAND_SUCCESS, 1, 0]));
       setTimeout(() => {
         expect(testResult).toBeFalsy();
         done();
@@ -127,7 +129,7 @@ let rspProc = new McuSerialResponseProcessor(mcus.rawCommands$);
         
       }
       // cconsole.log({ar})
-      cs.next(ar);
+      mcus.parseBuffer( Buffer.from(ar));
       setTimeout(() => {
         const exp = [1.100000023841858, 2.0999999046325684, 3.0999999046325684];
          expect(testResult.data).toEqual( exp);
