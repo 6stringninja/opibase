@@ -8,6 +8,7 @@ import { OpiSerialPorts } from './OpiSerialPorts.js';
 import { McuSerialParser } from '../../mcu/McuSerialParser.js';
 import { DebugSerialParser } from '../../debug/DebugSerialParser.js';
 import { interval } from 'rxjs';
+import { McuSerialRequestProcessor } from '../../mcu/McuSerialRequestProcessor.js';
 export function OpiServerLaunch() {
   const optPlatform = new OptPlatform();
   const hostName = os.hostname();
@@ -27,7 +28,10 @@ export function OpiServerLaunch() {
   SerialPort.list().then((port) => {
     const source = interval(1000);
 //output: 0,1,2,3,4,5....
-const subscribe = source.subscribe(val => global.gc());
+const subscribe = source.subscribe(val => {
+
+  global.gc();
+});
 
     console.log({}); 
     console.log("Port: ", port);
@@ -40,6 +44,22 @@ const subscribe = source.subscribe(val => global.gc());
 
     const mcuSerialParser = new McuSerialParser(mcuPort? mcuPort.port : null);
     const debugSerialParser  = new DebugSerialParser(debugPort? debugPort.port : null);
+    const mcuReq = new McuSerialRequestProcessor();
+    mcuReq.sendCommand$.subscribe(s=>{
+      if(mcuPort && mcuPort.port && mcuPort.port.isOpen){
+        mcuPort.port.write(s);
+      }
+      else{
+        console.log(s);
+      }
+     
+    });
+    const testi = interval(1000);
+    testi.subscribe((s)=>{
+      mcuReq.requestBnoEulerEnableAxisStream(true);
+      
+    })
+
     global.gc();
    // console.log({debugPort,debugSerialParser,opiSerialPorts,optPlatform})
    // const ts = new OpiServer(optPlatform);
