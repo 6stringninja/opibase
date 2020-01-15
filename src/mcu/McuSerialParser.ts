@@ -62,7 +62,7 @@ export class McuSerialParser {
             console.log("port connected");
             this.parser.on('data', (data) => {
                 this.parseBuffer(data)
-             
+                console.log(data);
             });
             this.testPort();
         }
