@@ -35,7 +35,7 @@ export function OpiServerLaunch() {
 
     const mcuSerialParser = new McuSerialParser(mcuPort? mcuPort.port : null);
     const debugSerialParser  = new DebugSerialParser(debugPort? debugPort.port : null);
-    console.log({debugPort,debugSerialParser,opiSerialPorts,optPlatform})
+   // console.log({debugPort,debugSerialParser,opiSerialPorts,optPlatform})
    // const ts = new OpiServer(optPlatform);
   });
 }
