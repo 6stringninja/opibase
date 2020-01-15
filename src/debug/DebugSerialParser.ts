@@ -11,7 +11,7 @@ export class DebugSerialParser {
     constructor (private port?:SerialPort) {
         if(port){
             this.parser = port.pipe(new Readline({ delimiter: '\r\n' }));
-            console.log("port connected");
+            console.log("debug port connected");
             this.parser.on('data', (data) => {
                 this.parseData(data)
                 console.log(data);

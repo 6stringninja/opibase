@@ -27,7 +27,7 @@ export function OpiServerLaunch() {
     console.log("Port: ", port);
     console.log({ platform, hostName });
     optPlatform.ports = port;
-    console.log({ mcu: optPlatform.hasMcu, gps: optPlatform.hasGps, tel: optPlatform.hasTel });
+    console.log({ mcu: optPlatform.hasMcu, gps: optPlatform.hasGps, tel: optPlatform.hasTel,dbug:optPlatform.hasDbg });
     const opiSerialPorts = new OpiSerialPorts(optPlatform);
     const mcuPort = opiSerialPorts.ports.find(f=> f.uartType===OpiUartFunction.MCU && f.enabled);
     const debugPort = opiSerialPorts.ports.find(f=> f.uartType===OpiUartFunction.DBG && f.enabled);
