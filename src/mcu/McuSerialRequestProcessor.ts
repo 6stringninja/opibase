@@ -32,7 +32,7 @@ export class McuSerialRequestProcessor {
     public sendCommand(command: OPI_COMMAND_E) {
         //const prom = new Promise<number>((r,e)=>{
         this.buffOut.writeUInt8(command, 1); 
-        this.buffOut.writeUInt8(this.buffOutIndex, 2);
+        this.buffOut.writeUInt8(this.buffOutIndex-3, 2);
         /*for (let index = 3; index < this.buffOutIndex; index++) {
          this.buffOut.writeUInt8(data[0],this.buffOutIndex )
             
