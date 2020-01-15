@@ -14,7 +14,7 @@ export class DebugSerialParser {
             console.log("debug port connected");
             this.parser.on('data', (data) => {
                 this.parseData(data)
-                console.log(data);
+              this.sendData(data);
             });
            
         }
