@@ -47,7 +47,7 @@ const subscribe = source.subscribe(val => {
     const mcuSerialParser = new McuSerialParser(mcuPort? mcuPort.port : null);
     const debugSerialParser  = new DebugSerialParser(debugPort? debugPort.port : null);
     const mcuResp = new McuSerialResponseProcessor(mcuSerialParser.rawCommands$);
-    mcuResp.BnoEulerEnableAxisStream$.subscribe((s)=>console.log(s));
+    mcuResp.BnoEulerEnableAxisStream$.subscribe((s)=>console.log({e:s.euler, b: s.baro, r: s.rc, q: s.quaternion, p: s.pwm}));
     //mcuSerialParser.rawCommands$.subscribe(s=> console.log(s));
     const mcuReq = new McuSerialRequestProcessor();
     mcuReq.sendCommand$.subscribe(s=>{
@@ -59,10 +59,12 @@ const subscribe = source.subscribe(val => {
       }
      
     });
-    const testi = interval(1000);
+    const testi = interval(10);
+
+    let ddd = 0;
     testi.subscribe((s)=>{
-      mcuReq.requestStreamSettings(new McuCommandStreamSettings(255));
-      
+      mcuReq.requestStreamSettings(new McuCommandStreamSettings(ddd++));
+      if(ddd===256)ddd=0;
     })
 
     global.gc();
