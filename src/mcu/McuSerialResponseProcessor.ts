@@ -2,9 +2,9 @@ import { ConcealedSubject } from "../rx/ConcealedSubject";
 import { ConcealedBehaviorSubject } from "../rx/ConcealedBehaviorSubject";
 import { Observable, Subscription } from "rxjs";
 import { OPI_RPC_E, OPI_COMMAND_E } from "./McuSerialParser";
-import { McuBnoEulerAxis } from "./McuBnoEulerAxis";
+import { McuBnoEulerAxis, McuRcData } from "./McuBnoEulerAxis";
 import { McuCommandResult, McuCommandStreamSettings } from "./McuCommandResult";
-export type responseType = McuCommandStreamSettings | McuBnoEulerAxis  | number | string
+export type responseType = McuCommandStreamSettings | McuBnoEulerAxis  | McuRcData | number | string
  
 export class EnumeratedConcealedBehaviorSubject<TENUM,TBS>  extends ConcealedBehaviorSubject<TBS>{
    
@@ -69,6 +69,10 @@ export class McuSerialResponseProcessor {
     get BnoEulerAxis$() {
         return this.BnoEulerAxisCs.observable;
     }
+    private RcDataCs = this.crbs.setMember(OPI_COMMAND_E.OPI_COMMAND_DEVICE_RC_DATA,new McuRcData())
+    get RcData$() {
+        return this.RcDataCs.observable;
+    }
     private CommandErrorCs = new ConcealedSubject<McuCommandResult>();
     get CommandError$() {
         return this.CommandErrorCs.observable;
@@ -99,6 +103,18 @@ export class McuSerialResponseProcessor {
                     c.buff.readFloatLE(8)
                 ], c.buff.readInt32LE(12)));
                 break;
+                case OPI_COMMAND_E.OPI_COMMAND_DEVICE_RC_DATA:
+                    this.RcDataCs.next(new McuRcData([
+                        c.buff.readInt16LE(0),
+                        c.buff.readInt16LE(2),
+                        c.buff.readInt16LE(4),
+                        c.buff.readInt16LE(6),
+                        c.buff.readInt16LE(8),
+                        c.buff.readInt16LE(10),
+                        c.buff.readInt16LE(12),
+                        c.buff.readInt16LE(14),
+                    ]));
+                    break;
             case OPI_COMMAND_E.OPI_COMMAND_STREAM_SETTINGS:
                 this.BnoEulerEnableAxisStreamCs.next(new McuCommandStreamSettings(c.buff.readUInt8(0)));
                 break;

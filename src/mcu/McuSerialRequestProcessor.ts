@@ -19,6 +19,10 @@ export class McuSerialRequestProcessor {
         this.resetOutBuffer();
         this.sendCommand(OPI_COMMAND_E.OPI_COMMAND_DEVICE_BNO_EULER);
     }
+    requestRcData(): void {
+        this.resetOutBuffer();
+        this.sendCommand(OPI_COMMAND_E.OPI_COMMAND_DEVICE_RC_DATA);
+    }
     requestStreamSettings(settings = new McuCommandStreamSettings()): void {
         this.resetOutBuffer();
         this.writeOutUint8(settings.data);
