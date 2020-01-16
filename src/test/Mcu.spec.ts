@@ -5,6 +5,7 @@ import { McuBnoEulerAxis } from "../mcu/McuBnoEulerAxis";
 import { McuSerialResponseProcessor } from "../mcu/McuSerialResponseProcessor";
 import { McuSerialRequestProcessor } from "../mcu/McuSerialRequestProcessor";
 import { doesNotReject } from "assert";
+import { McuCommandStreamSettings } from "../mcu/McuCommandResult";
 
  
 const fakePorts: SerialPort.PortInfo[] = [
@@ -77,12 +78,12 @@ let rspProc = new McuSerialResponseProcessor(mcus.rawCommands$);
       rspProc.BnoEulerEnableAxisStream$.subscribe((id) => {
 
         //
-        testResult = id;
+        testResult = id.euler;
 
         //     console.log({id})
 
       });
-      mcus.parseBuffer( Buffer.from([McuSerialParser.OPI_START_B, OPI_COMMAND_E.OPI_COMMAND_DEVICE_BNO_EULER_ENABLE_STREAM, OPI_RPC_E.OPI_PRC_COMMAND_SUCCESS, 1, 1]));
+      mcus.parseBuffer( Buffer.from([McuSerialParser.OPI_START_B, OPI_COMMAND_E.OPI_COMMAND_STREAM_SETTINGS, OPI_RPC_E.OPI_PRC_COMMAND_SUCCESS, 1, 1]));
       setTimeout(() => {
         expect(testResult).toBeTruthy();
         done();
@@ -94,12 +95,12 @@ let rspProc = new McuSerialResponseProcessor(mcus.rawCommands$);
       rspProc.BnoEulerEnableAxisStream$.subscribe((id) => {
 
         //
-        testResult = id;
+        testResult = id.euler;
 
         //     console.log({id})
 
       });
-      mcus.parseBuffer( Buffer.from([McuSerialParser.OPI_START_B, OPI_COMMAND_E.OPI_COMMAND_DEVICE_BNO_EULER_ENABLE_STREAM, OPI_RPC_E.OPI_PRC_COMMAND_SUCCESS, 1, 0]));
+      mcus.parseBuffer( Buffer.from([McuSerialParser.OPI_START_B, OPI_COMMAND_E.OPI_COMMAND_STREAM_SETTINGS, OPI_RPC_E.OPI_PRC_COMMAND_SUCCESS, 1, 0]));
       setTimeout(() => {
         expect(testResult).toBeFalsy();
         done();
@@ -164,29 +165,32 @@ let md = new McuSerialRequestProcessor();
     })
      
 
-    it('sendCommand should requestBnoEulerEnableAxisStream true',  (done) => {
+    it('sendCommand should requestStreamSettings true',  (done) => {
       
-      let result:number;
+      let result:McuCommandStreamSettings;
       let s = md.sendCommand$.subscribe((b)=>{
-       result = bufftoNumber(b)[3];
-        // console.log({result});
+       result = new McuCommandStreamSettings(bufftoNumber(b)[3]);
+     
       })
-md.requestBnoEulerEnableAxisStream(true);
+      const commandSetting = new McuCommandStreamSettings(0);
+      commandSetting.euler = true;
+      console.log({b: commandSetting.euler });
+md.requestStreamSettings(commandSetting);
       setTimeout(() => {
-        expect(result).toBeTruthy();
+        expect(result.euler).toBeTruthy();
         s.unsubscribe();
         done();
        
       },10);  
     })
-    it('sendCommand should requestBnoEulerEnableAxisStream false',  (done) => {
+    it('sendCommand should requestStreamSettings false',  (done) => {
       let testBuffer:Buffer;
       let result:number;
      let s =  md.sendCommand$.subscribe((b)=>{
        result = bufftoNumber(b)[3];
         // console.log({result});
       })
-      md.requestBnoEulerEnableAxisStream(false);
+      md.requestStreamSettings(new McuCommandStreamSettings(0));
       setTimeout(() => {
         expect(result).toBeFalsy();
         s.unsubscribe();

@@ -1,6 +1,7 @@
 import { ConcealedSubject } from "../rx/ConcealedSubject";
 import { Subscription } from "rxjs";
 import { McuSerialParser, OPI_COMMAND_E } from "./McuSerialParser";
+import { McuCommandStreamSettings } from "./McuCommandResult";
 export class McuSerialRequestProcessor {
     private buffOut = Buffer.alloc(McuSerialParser.BUFFER_SIZE);
     private buffOutIndex = 3;
@@ -18,10 +19,11 @@ export class McuSerialRequestProcessor {
         this.resetOutBuffer();
         this.sendCommand(OPI_COMMAND_E.OPI_COMMAND_DEVICE_BNO_EULER);
     }
-    requestBnoEulerEnableAxisStream(enabled = true): void {
+    requestStreamSettings(settings = new McuCommandStreamSettings()): void {
         this.resetOutBuffer();
-        this.writeOutBool(enabled);
-        this.sendCommand(OPI_COMMAND_E.OPI_COMMAND_DEVICE_BNO_EULER_ENABLE_STREAM);
+        this.writeOutUint8(settings.data);
+        this.sendCommand(OPI_COMMAND_E.OPI_COMMAND_STREAM_SETTINGS);
+        console.log({settings})
     }
     public resetOutBuffer() {
         this.buffOut.writeUInt8(McuSerialParser.OPI_START_B, 0);

@@ -10,6 +10,7 @@ import { DebugSerialParser } from '../../debug/DebugSerialParser.js';
 import { interval } from 'rxjs';
 import { McuSerialRequestProcessor } from '../../mcu/McuSerialRequestProcessor.js';
 import { McuSerialResponseProcessor } from '../../mcu/McuSerialResponseProcessor.js';
+import { McuCommandStreamSettings } from '../../mcu/McuCommandResult.js';
 export function OpiServerLaunch() {
   const optPlatform = new OptPlatform();
   const hostName = os.hostname();
@@ -60,7 +61,7 @@ const subscribe = source.subscribe(val => {
     });
     const testi = interval(1000);
     testi.subscribe((s)=>{
-      mcuReq.requestBnoEulerEnableAxisStream(true);
+      mcuReq.requestStreamSettings(new McuCommandStreamSettings(255));
       
     })
 
