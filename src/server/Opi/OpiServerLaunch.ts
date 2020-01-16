@@ -59,7 +59,7 @@ const subscribe = source.subscribe(val => {
       }
      
     });
-    const testi = interval(10);
+    const testi = interval(100);
 
     let ddd = 0;
     testi.subscribe((s)=>{
