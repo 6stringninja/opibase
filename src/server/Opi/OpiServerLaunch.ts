@@ -50,7 +50,10 @@ const subscribe = source.subscribe(val => {
    // mcuResp.BnoEulerEnableAxisStream$.subscribe((s)=>console.log({d:s.data,e:s.euler, b: s.baro, r: s.rc, q: s.quaternion, p: s.pwm}));
     //mcuSerialParser.rawCommands$.subscribe(s=> console.log(s));
     //mcuResp.BnoEulerAxis$.subscribe(s=>console.log(s));
-    mcuResp.RcData$.subscribe(s=>console.log(s.data));
+    mcuResp.RcData$.subscribe(s=>{
+      const dd = s.data.join(" , ") + new Date().getTime().toString();
+      return console.log(dd);
+    });
     const mcuReq = new McuSerialRequestProcessor();
     mcuReq.sendCommand$.subscribe(s=>{
       if(mcuPort && mcuPort.port && mcuPort.port.isOpen){
