@@ -16,7 +16,7 @@ const bcd = abc.getMember(OPI_COMMAND_E.OPI_COMMAND_DEVICE_BNO_EULER);
  const dd = abc.setMember<McuBnoEulerAxis>(OPI_COMMAND_E.OPI_COMMAND_DEVICE_BNO_EULER,new McuBnoEulerAxis());
  
  
- //OpiServerLaunch();
+ OpiServerLaunch();
  
 
 //const server = new SerialServer();
