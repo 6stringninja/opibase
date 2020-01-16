@@ -47,7 +47,7 @@ const subscribe = source.subscribe(val => {
     const mcuSerialParser = new McuSerialParser(mcuPort? mcuPort.port : null);
     const debugSerialParser  = new DebugSerialParser(debugPort? debugPort.port : null);
     const mcuResp = new McuSerialResponseProcessor(mcuSerialParser.rawCommands$);
-    mcuResp.BnoEulerAxis$.subscribe((s)=>console.log(s));
+    mcuResp.BnoEulerEnableAxisStream$.subscribe((s)=>console.log(s));
     //mcuSerialParser.rawCommands$.subscribe(s=> console.log(s));
     const mcuReq = new McuSerialRequestProcessor();
     mcuReq.sendCommand$.subscribe(s=>{
