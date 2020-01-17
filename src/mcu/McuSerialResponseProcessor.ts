@@ -144,14 +144,14 @@ export class McuSerialResponseProcessor {
                 ], c.buff.readInt32LE(12)));
                 break;
             case OPI_COMMAND_E.OPI_COMMAND_DEVICE_IMU_ROTATION:
-                this.ImuAccelerationCs.next(new McuImuVector([
+                this.ImuRotationCs.next(new McuImuVector([
                     c.buff.readFloatLE(0),
                     c.buff.readFloatLE(4),
                     c.buff.readFloatLE(8)
                 ], c.buff.readInt32LE(12)));
                 break;
             case OPI_COMMAND_E.OPI_COMMAND_DEVICE_IMU_MAGNETISM:
-                this.ImuAccelerationCs.next(new McuImuVector([
+                this.ImuMagnetismCs.next(new McuImuVector([
                     c.buff.readFloatLE(0),
                     c.buff.readFloatLE(4),
                     c.buff.readFloatLE(8)
@@ -159,7 +159,7 @@ export class McuSerialResponseProcessor {
                 break;
             //McuImuQuaternions
             case OPI_COMMAND_E.OPI_COMMAND_DEVICE_IMU_QUATERNIONS:
-                this.ImuAccelerationCs.next(new McuImuQuaternions([
+                this.ImuQuaternionsCs.next(new McuImuQuaternions([
                     c.buff.readFloatLE(0),
                     c.buff.readFloatLE(4),
                     c.buff.readFloatLE(8),
