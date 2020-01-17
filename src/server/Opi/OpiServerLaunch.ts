@@ -74,15 +74,19 @@ const subscribe = source.subscribe(val => {
 
     global.gc();
     const stream = new McuCommandStreamSettings();
-    stream.baro_altitude = false;
+    stream.baro_altitude = true;
     stream.imu_rotation = true;
+    stream.imu_quaternion = true;
     mcuResp.McuStreamSettings$.subscribe(s=>{
       console.log({b:s.baro_altitude, p:s.ppm, d: s.data})
       if(s.baro_altitude){
         mcuResp.BaroAltitude$.subscribe((b)=>console.log(b));
       }
       if(s.imu_rotation){
-        mcuResp.ImuRotation$.subscribe((s)=>console.log({x:s.X,y:s.Y,z:s.Z}));
+        mcuResp.ImuRotation$.subscribe((s)=>console.log({x:s.X,y:s.Y,z:s.Z,ts:s.timeStamp}));
+      }
+      if(s.imu_quaternion){
+        mcuResp.ImuQuaternions$.subscribe((s)=>console.log({x:s.X,y:s.Y,z:s.Z,W:s.W,ts:s.timeStamp}));
       }
     });
     setTimeout(()=>mcuReq.requestStreamSettings(stream),1000);
