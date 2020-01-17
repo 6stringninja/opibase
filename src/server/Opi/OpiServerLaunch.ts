@@ -47,9 +47,9 @@ const subscribe = source.subscribe(val => {
     const mcuSerialParser = new McuSerialParser(mcuPort? mcuPort.port : null);
     const debugSerialParser  = new DebugSerialParser(debugPort? debugPort.port : null);
     const mcuResp = new McuSerialResponseProcessor(mcuSerialParser.rawCommands$);
-   // mcuResp.BnoEulerEnableAxisStream$.subscribe((s)=>console.log({d:s.data,e:s.euler, b: s.baro, r: s.rc, q: s.quaternion, p: s.pwm}));
+   // mcuResp.McuStreamSettings$.subscribe((s)=>console.log({d:s.data,e:s.euler, b: s.baro, r: s.rc, q: s.quaternion, p: s.pwm}));
     //mcuSerialParser.rawCommands$.subscribe(s=> console.log(s));
-    //mcuResp.BnoEulerAxis$.subscribe(s=>console.log(s));
+    //mcuResp.ImuEulerFromQuats$.subscribe(s=>console.log(s));
     mcuResp.RcData$.subscribe(s=>{
       const dd = s.data.join(" , ") + new Date().getTime().toString();
       return console.log(dd);
@@ -68,12 +68,22 @@ const subscribe = source.subscribe(val => {
 
     let ddd = 0;
     testi.subscribe((s)=>{
-     // mcuReq.requestStreamSettings(new McuCommandStreamSettings(ddd++));
+     //mcuReq.requestStreamSettings(new McuCommandStreamSettings());
       if(ddd===256)ddd=0;
     })
 
     global.gc();
+    const stream = new McuCommandStreamSettings();
+    stream.baro = true;
+    mcuResp.McuStreamSettings$.subscribe(s=>{
+      if(s.baro){
+        mcuResp.BaroAltitude$.subscribe((b)=>console.log(b));
+      }
+    });
+    setTimeout(()=>mcuReq.requestStreamSettings(stream),1000);
    // console.log({debugPort,debugSerialParser,opiSerialPorts,optPlatform})
    // const ts = new OpiServer(optPlatform);
   });
+
+
 }

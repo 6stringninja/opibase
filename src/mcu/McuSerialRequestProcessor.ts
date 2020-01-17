@@ -17,7 +17,7 @@ export class McuSerialRequestProcessor {
     }
     requestBnoEulerAxis(): void {
         this.resetOutBuffer();
-        this.sendCommand(OPI_COMMAND_E.OPI_COMMAND_DEVICE_BNO_EULER);
+        this.sendCommand(OPI_COMMAND_E.OPI_COMMAND_DEVICE_IMU_ORIENTATION_EULER_FROM_QUATERNIONS);
     }
     requestRcData(): void {
         this.resetOutBuffer();
@@ -25,7 +25,7 @@ export class McuSerialRequestProcessor {
     }
     requestStreamSettings(settings = new McuCommandStreamSettings()): void {
         this.resetOutBuffer();
-        this.writeOutUint8(settings.data);
+        this.writeOutUint16(settings.data);
         this.sendCommand(OPI_COMMAND_E.OPI_COMMAND_STREAM_SETTINGS);
         console.log({settings})
     }

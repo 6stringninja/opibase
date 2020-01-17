@@ -1,7 +1,7 @@
 import SerialPort = require("serialport");
 import { ConcealedSubject } from "../rx/ConcealedSubject";
 import { McuSerialParser, OPI_COMMAND_E, OPI_RPC_E } from "../mcu/McuSerialParser";
-import { McuBnoEulerAxis } from "../mcu/McuBnoEulerAxis";
+import { McuImuVector } from "../mcu/McuImuVector";
 import { McuSerialResponseProcessor } from "../mcu/McuSerialResponseProcessor";
 import { McuSerialRequestProcessor } from "../mcu/McuSerialRequestProcessor";
 import { doesNotReject } from "assert";
@@ -75,15 +75,15 @@ let rspProc = new McuSerialResponseProcessor(mcus.rawCommands$);
 
     it('BnoEulerEnableAxisStream should be true', (done) => {
       let testResult = false;
-      rspProc.BnoEulerEnableAxisStream$.subscribe((id) => {
+      rspProc.McuStreamSettings$.subscribe((id) => {
 
         //
         testResult = id.euler;
 
-        //     console.log({id})
+            console.log({id})
 
       });
-      mcus.parseBuffer( Buffer.from([McuSerialParser.OPI_START_B, OPI_COMMAND_E.OPI_COMMAND_STREAM_SETTINGS, OPI_RPC_E.OPI_PRC_COMMAND_SUCCESS, 1, 1]));
+      mcus.parseBuffer( Buffer.from([McuSerialParser.OPI_START_B, OPI_COMMAND_E.OPI_COMMAND_STREAM_SETTINGS, OPI_RPC_E.OPI_PRC_COMMAND_SUCCESS, 2 ,1,0]));
       setTimeout(() => {
         expect(testResult).toBeTruthy();
         done();
@@ -92,7 +92,7 @@ let rspProc = new McuSerialResponseProcessor(mcus.rawCommands$);
     })
     it('BnoEulerEnableAxisStream should be false', (done) => {
       let testResult = true;
-      rspProc.BnoEulerEnableAxisStream$.subscribe((id) => {
+      rspProc.McuStreamSettings$.subscribe((id) => {
 
         //
         testResult = id.euler;
@@ -100,7 +100,7 @@ let rspProc = new McuSerialResponseProcessor(mcus.rawCommands$);
         //     console.log({id})
 
       });
-      mcus.parseBuffer( Buffer.from([McuSerialParser.OPI_START_B, OPI_COMMAND_E.OPI_COMMAND_STREAM_SETTINGS, OPI_RPC_E.OPI_PRC_COMMAND_SUCCESS, 1, 0]));
+      mcus.parseBuffer( Buffer.from([McuSerialParser.OPI_START_B, OPI_COMMAND_E.OPI_COMMAND_STREAM_SETTINGS, OPI_RPC_E.OPI_PRC_COMMAND_SUCCESS,2, 0,0]));
       setTimeout(() => {
         expect(testResult).toBeFalsy();
         done();
@@ -109,8 +109,8 @@ let rspProc = new McuSerialResponseProcessor(mcus.rawCommands$);
     })
 
     it('BnoEulerEnableAxisStream should be false', (done) => {
-      let testResult = new McuBnoEulerAxis();
-      rspProc.BnoEulerAxis$.subscribe((id) => {
+      let testResult = new McuImuVector();
+      rspProc.ImuEulerFromQuats$.subscribe((id) => {
 
         //
         testResult = id;
@@ -123,7 +123,7 @@ let rspProc = new McuSerialResponseProcessor(mcus.rawCommands$);
       bf.writeFloatLE(2.1,4);
       bf.writeFloatLE(3.1,8);
       bf.writeInt32LE(999999,12);
-      const ar = [McuSerialParser.OPI_START_B, OPI_COMMAND_E.OPI_COMMAND_DEVICE_BNO_EULER, OPI_RPC_E.OPI_PRC_COMMAND_SUCCESS, bf.length];
+      const ar = [McuSerialParser.OPI_START_B, OPI_COMMAND_E.OPI_COMMAND_DEVICE_IMU_ORIENTATION_EULER_FROM_QUATERNIONS, OPI_RPC_E.OPI_PRC_COMMAND_SUCCESS, bf.length];
     
       for (let index = 0; index < bf.length; index++) {
         ar.push(bf.readUInt8(index))

@@ -1,4 +1,4 @@
-export class McuBnoEulerAxis {
+export class McuImuVector {
     constructor(public data: number[] = [0, 0, 0], public timeStamp = 0) {
     }
     get X() {
@@ -11,14 +11,21 @@ export class McuBnoEulerAxis {
         return this.data[2];
     }
 }
-
+export class McuImuQuaternions extends McuImuVector {
+    constructor(public data: number[] = [0, 0, 0, 0], public timeStamp = 0) {
+        super(data, timeStamp);
+    }
+    get W() {
+        return this.data[3];
+    }
+}
 export class McuRcData {
-    channelMap =[0,1,2,3,4,5,6,7];
-    constructor(public data: number[] = [], public chans = 8, public timeStamp = 0) {
-        if(data.length===0){
+    channelMap = [0, 1, 2, 3, 4, 5, 6, 7];
+    constructor(public data: number[] = [], public commands: number[] = [], public timeStamp = 0, public chans = 8) {
+        if (data.length === 0) {
             for (let index = 0; index < chans; index++) {
-               data.push(1500);
-                
+                data.push(1500);
+
             }
         }
     }
@@ -31,19 +38,19 @@ export class McuRcData {
     get Yaw() {
         return this.data[this.channelMap[2]];
     }
-    get Throttle(){
+    get Throttle() {
         return this.data[this.channelMap[3]];
     }
-    get Aux1(){
+    get Aux1() {
         return this.data[this.channelMap[3]];
     }
-    get Aux2(){
+    get Aux2() {
         return this.data[this.channelMap[3]];
     }
-    get Aux3(){
+    get Aux3() {
         return this.data[this.channelMap[3]];
     }
-    get Aux4(){
+    get Aux4() {
         return this.data[this.channelMap[3]];
     }
 }
