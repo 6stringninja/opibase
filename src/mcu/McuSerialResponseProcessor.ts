@@ -171,7 +171,7 @@ export class McuSerialResponseProcessor {
                     c.buff.readFloatLE(0),
                     c.buff.readFloatLE(4),
                     c.buff.readFloatLE(8),
-                    c.buff.readInt32LE(16)));
+                    c.buff.readInt32LE(12)));
                 break;
             case OPI_COMMAND_E.OPI_COMMAND_DEVICE_RC_DATA:
                 this.RcDataCs.next(new McuRcData([
