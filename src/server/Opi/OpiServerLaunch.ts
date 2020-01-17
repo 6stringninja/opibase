@@ -52,7 +52,7 @@ const subscribe = source.subscribe(val => {
     //mcuResp.ImuEulerFromQuats$.subscribe(s=>console.log(s));
     mcuResp.RcData$.subscribe(s=>{
       const dd = s.data.join(" , ") + new Date().getTime().toString();
-      return console.log(dd);
+     // return console.log(dd);
     });
     const mcuReq = new McuSerialRequestProcessor();
     mcuReq.sendCommand$.subscribe(s=>{
@@ -76,6 +76,7 @@ const subscribe = source.subscribe(val => {
     const stream = new McuCommandStreamSettings();
     stream.baro = true;
     mcuResp.McuStreamSettings$.subscribe(s=>{
+      console.log({b:s.baro, p:s.pwm, d: s.data})
       if(s.baro){
         mcuResp.BaroAltitude$.subscribe((b)=>console.log(b));
       }
