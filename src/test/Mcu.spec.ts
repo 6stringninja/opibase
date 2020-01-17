@@ -78,7 +78,7 @@ let rspProc = new McuSerialResponseProcessor(mcus.rawCommands$);
       rspProc.McuStreamSettings$.subscribe((id) => {
 
         //
-        testResult = id.euler;
+        testResult = id.imu_orientation_calc;
 
             console.log({id})
 
@@ -95,7 +95,7 @@ let rspProc = new McuSerialResponseProcessor(mcus.rawCommands$);
       rspProc.McuStreamSettings$.subscribe((id) => {
 
         //
-        testResult = id.euler;
+        testResult = id.imu_orientation_calc;
 
         //     console.log({id})
 
@@ -173,11 +173,11 @@ let md = new McuSerialRequestProcessor();
      
       })
       const commandSetting = new McuCommandStreamSettings(0);
-      commandSetting.euler = true;
-      console.log({b: commandSetting.euler });
+      commandSetting.imu_orientation_calc = true;
+      console.log({b: commandSetting.imu_orientation_calc });
 md.requestStreamSettings(commandSetting);
       setTimeout(() => {
-        expect(result.euler).toBeTruthy();
+        expect(result.imu_orientation_calc).toBeTruthy();
         s.unsubscribe();
         done();
        

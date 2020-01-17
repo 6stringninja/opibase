@@ -74,10 +74,10 @@ const subscribe = source.subscribe(val => {
 
     global.gc();
     const stream = new McuCommandStreamSettings();
-    stream.baro = true;
+    stream.baro_altitude = true;
     mcuResp.McuStreamSettings$.subscribe(s=>{
-      console.log({b:s.baro, p:s.pwm, d: s.data})
-      if(s.baro){
+      console.log({b:s.baro_altitude, p:s.ppm, d: s.data})
+      if(s.baro_altitude){
         mcuResp.BaroAltitude$.subscribe((b)=>console.log(b));
       }
     });
