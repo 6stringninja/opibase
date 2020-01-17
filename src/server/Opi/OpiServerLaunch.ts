@@ -77,6 +77,7 @@ const subscribe = source.subscribe(val => {
     stream.baro_altitude = true;
     stream.imu_rotation = true;
     stream.imu_quaternion = true;
+    stream.ppm = true;
     mcuResp.McuStreamSettings$.subscribe(s=>{
       console.log({b:s.baro_altitude, p:s.ppm, d: s.data})
       if(s.baro_altitude){
@@ -87,6 +88,12 @@ const subscribe = source.subscribe(val => {
       }
       if(s.imu_quaternion){
         mcuResp.ImuQuaternions$.subscribe((s)=>console.log({x:s.X,y:s.Y,z:s.Z,W:s.W,ts:s.timeStamp}));
+      }
+      if(s.ppm){
+        mcuResp.RcData$.subscribe(s=>{
+          const dd = s.data.join(" , ") + new Date().getTime().toString();
+         return console.log(dd);
+        });
       }
     });
     setTimeout(()=>mcuReq.requestStreamSettings(stream),1000);
