@@ -81,18 +81,18 @@ const subscribe = source.subscribe(val => {
     mcuResp.McuStreamSettings$.subscribe(s=>{
       console.log({b:s.baro_altitude, p:s.ppm, d: s.data})
       if(s.baro_altitude){
-        mcuResp.BaroAltitude$.subscribe((b)=>console.log(b));
+     //   mcuResp.BaroAltitude$.subscribe((b)=>console.log(b));
       }
       if(s.imu_rotation){
-        mcuResp.ImuRotation$.subscribe((s)=>console.log({x:s.X,y:s.Y,z:s.Z,ts:s.timeStamp}));
+      //  mcuResp.ImuRotation$.subscribe((s)=>console.log({x:s.X,y:s.Y,z:s.Z,ts:s.timeStamp}));
       }
       if(s.imu_quaternion){
-        mcuResp.ImuQuaternions$.subscribe((s)=>console.log({x:s.X,y:s.Y,z:s.Z,W:s.W,ts:s.timeStamp}));
+      //  mcuResp.ImuQuaternions$.subscribe((s)=>console.log({x:s.X,y:s.Y,z:s.Z,W:s.W,ts:s.timeStamp}));
       }
       if(s.ppm){
         mcuResp.RcData$.subscribe(s=>{
           const dd = s.data.join(" , ") + new Date().getTime().toString();
-         return console.log(dd);
+         // console.log(dd);
         });
       }
     });
