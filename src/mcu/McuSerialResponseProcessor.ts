@@ -5,8 +5,10 @@ import { OPI_RPC_E, OPI_COMMAND_E } from "./McuSerialParser";
 import { McuImuVector, McuRcData, McuImuQuaternions } from "./McuImuVector";
 import { McuCommandResult, McuCommandStreamSettings } from "./McuCommandResult";
 import { McuBaroAltitude } from "./McuBaroAltitude";
-export type responseType = McuBaroAltitude | McuCommandStreamSettings | McuImuVector | McuRcData | number | string
 
+export type McuConvertableResponsTypes = McuBaroAltitude | McuCommandStreamSettings | McuImuVector | McuRcData;
+export type McuResponseType = McuConvertableResponsTypes | number | string
+ 
 export class EnumeratedConcealedBehaviorSubject<TENUM, TBS> extends ConcealedBehaviorSubject<TBS>{
 
     public enumVal: TENUM;
@@ -49,7 +51,7 @@ export class EnumeratedConcealedBehaviorSubjects<TENUM, T>  {
         return r;
     }
 }
-export class CommandResponseBehaviorSubjects extends EnumeratedConcealedBehaviorSubjects<OPI_COMMAND_E, responseType>{
+export class CommandResponseBehaviorSubjects extends EnumeratedConcealedBehaviorSubjects<OPI_COMMAND_E, McuResponseType>{
     constructor() {
         super(OPI_COMMAND_E, (e) => new EnumeratedConcealedBehaviorSubject(e, null));
     }
@@ -57,7 +59,7 @@ export class CommandResponseBehaviorSubjects extends EnumeratedConcealedBehavior
 export class McuSerialResponseProcessor {
     private DeviceIdCs = new ConcealedBehaviorSubject<number>(0);
     sub: Subscription;
-    responseBsArray: responseType[] = [];
+    responseBsArray: McuResponseType[] = [];
     crbs = new CommandResponseBehaviorSubjects();
     get DeviceId$() {
         return this.DeviceIdCs.observable;

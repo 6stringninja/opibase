@@ -1,13 +1,15 @@
 import { OPI_COMMAND_E, OPI_RPC_E } from "./McuSerialParser";
 import { bit_test, bit_set, bit_clear } from "../common/bitwise";
+import { McuBase } from "./McuBase";
+ 
 export class McuCommandResult {
     constructor(public command: OPI_COMMAND_E, public errorResult: OPI_RPC_E, public length: number, public buff?: Buffer) {
     }
 }
-export class McuCommandStreamSettings {
+export class McuCommandStreamSettings  extends McuBase {
 
     constructor(public data = 0) {
-
+super(OPI_COMMAND_E.OPI_COMMAND_STREAM_SETTINGS);
     }
     private set_bit(b: boolean, n: number) {
         if (b) {
