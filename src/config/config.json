@@ -19,9 +19,9 @@
 },
 {
     "portFunction": "GPS",
-    "portName":"non",
+    "portName":"COM31",
     "portBaud":9600,
-    "enabled" :false
+    "enabled" :true
 },
 {
     "portFunction": "TEL",

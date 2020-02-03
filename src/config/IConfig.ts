@@ -1,5 +1,8 @@
-import { OpiUartFunction } from "../server/Opi/OpiUartFunction";
-
+export enum ConfigUartFunctionEnum {
+    MCU = "MCU",
+    GPS = "GPS",
+    TEL = "TEL" 
+}
 export interface IConfigWebSockets{
     enabled:boolean
 }
@@ -7,7 +10,7 @@ export interface IConfigHttp{
     port:number;
 }
 export interface IConfigUart{
-    portFunction:OpiUartFunction;
+    portFunction:ConfigUartFunctionEnum;
     portName:string;
     portBaud:number;
     enabled:boolean;
